@@ -1,65 +1,272 @@
+"use client";
+
+import { useState, useCallback } from "react";
 import Image from "next/image";
+import { useConversations } from "@/lib/hooks/useConversations";
+import { ConversationSidebar } from "@/components/sidebar/ConversationSidebar";
+import { ActiveChatView } from "@/components/chat/ActiveChatView";
+import { ModelSelector } from "@/components/chat/ModelSelector";
+import { ModelComparisonSelector } from "@/components/chat/ModelComparisonSelector";
+import { ComparisonView } from "@/components/chat/ComparisonView";
+import { CodeViewer } from "@/components/editor/CodeViewer";
+import { SettingsDialog } from "@/components/layout/SettingsDialog";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
+  const {
+    conversations,
+    createConversation,
+    deleteConversation,
+    renameConversation,
+  } = useConversations();
+
+  const [activeConversationId, setActiveConversationId] = useState<
+    string | null
+  >(null);
+  const [selectedModel, setSelectedModel] = useState(
+    "anthropic:claude-opus-4-6"
+  );
+  const [showFiles, setShowFiles] = useState(false);
+  const [showToolCalls, setShowToolCalls] = useState(false);
+  const [showAgentPanel, setShowAgentPanel] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [viewingFile, setViewingFile] = useState<{
+    path: string;
+    content: string;
+  } | null>(null);
+
+  // Comparison mode state
+  const [comparisonMode, setComparisonMode] = useState(false);
+  const [comparisonModels, setComparisonModels] = useState<string[]>([]);
+
+  const activeConversation = conversations.find(
+    (c) => c.id === activeConversationId
+  );
+
+  const handleNewConversation = useCallback(async () => {
+    const conv = await createConversation(undefined, selectedModel);
+    setActiveConversationId(conv.id);
+  }, [createConversation, selectedModel]);
+
+  const handleSelectConversation = useCallback((id: string) => {
+    setActiveConversationId(id);
+    setViewingFile(null);
+  }, []);
+
+  const handleDeleteConversation = useCallback(
+    async (id: string) => {
+      await deleteConversation(id);
+      if (activeConversationId === id) {
+        setActiveConversationId(null);
+      }
+    },
+    [deleteConversation, activeConversationId]
+  );
+
+  const handleFileSelect = useCallback((path: string, content: string) => {
+    setViewingFile({ path, content });
+  }, []);
+
+  const handleToggleComparison = useCallback(() => {
+    setComparisonMode((prev) => !prev);
+    if (!comparisonMode) {
+      // Entering comparison mode — clear single chat state
+      setViewingFile(null);
+    }
+  }, [comparisonMode]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex h-full overflow-hidden">
+      {/* Left Sidebar - Conversations */}
+      {sidebarOpen && (
+        <div className="w-64 shrink-0">
+          <ConversationSidebar
+            conversations={conversations}
+            activeId={activeConversationId}
+            onSelect={handleSelectConversation}
+            onCreate={handleNewConversation}
+            onDelete={handleDeleteConversation}
+            onRename={renameConversation}
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      )}
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-0">
+        {/* Header */}
+        <header className="flex items-center gap-3 px-4 py-2 border-b border-zinc-700 bg-zinc-900">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-zinc-400 hover:text-zinc-200"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
           >
+            {sidebarOpen ? "◀" : "▶"}
+          </Button>
+
+          <div className="flex items-center gap-2">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/vocareum-logo.webp"
+              alt="Vocareum"
+              width={24}
+              height={24}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <h1 className="text-sm font-semibold text-zinc-200">
+              Vocareum Agent
+            </h1>
+          </div>
+
+          <div className="flex-1" />
+
+          {/* Model selector — switches between single and comparison */}
+          {comparisonMode ? (
+            <ModelComparisonSelector
+              selected={comparisonModels}
+              onChange={setComparisonModels}
+            />
+          ) : (
+            <ModelSelector value={selectedModel} onChange={setSelectedModel} />
+          )}
+
+          {/* Compare toggle */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className={
+              comparisonMode
+                ? "bg-red-500/20 text-red-400 hover:bg-red-500/30 hover:text-red-300"
+                : "text-zinc-400 hover:text-zinc-200"
+            }
+            onClick={handleToggleComparison}
           >
-            Documentation
-          </a>
+            {comparisonMode ? "✕ Exit Compare" : "⚖️ Compare"}
+          </Button>
+
+          {/* Tool calls toggle (only in single chat mode) */}
+          {!comparisonMode && (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`text-zinc-400 hover:text-zinc-200 ${
+                  showToolCalls ? "bg-zinc-700" : ""
+                }`}
+                onClick={() => setShowToolCalls(!showToolCalls)}
+              >
+                🔧 Tools
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`text-zinc-400 hover:text-zinc-200 ${
+                  showAgentPanel ? "bg-zinc-700" : ""
+                }`}
+                onClick={() => setShowAgentPanel(!showAgentPanel)}
+              >
+                🤖 Agents
+              </Button>
+            </>
+          )}
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`text-zinc-400 hover:text-zinc-200 ${
+              showFiles ? "bg-zinc-700" : ""
+            }`}
+            onClick={() => setShowFiles(!showFiles)}
+          >
+            📁 Files
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-zinc-400 hover:text-zinc-200"
+            onClick={() => setShowSettings(true)}
+          >
+            ⚙️
+          </Button>
+        </header>
+
+        {/* Content area */}
+        <div className="flex-1 flex overflow-hidden min-h-0">
+          {comparisonMode && comparisonModels.length >= 2 ? (
+            /* Comparison Mode */
+            <ComparisonView
+              models={comparisonModels}
+              createConversation={createConversation}
+            />
+          ) : comparisonMode ? (
+            /* Comparison mode but not enough models selected */
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center text-zinc-500">
+                <div className="text-4xl mb-4">⚖️</div>
+                <h2 className="text-xl font-semibold text-zinc-300 mb-2">
+                  Model Comparison
+                </h2>
+                <p className="text-sm max-w-md mb-2">
+                  Select 2-3 models from the dropdown above to compare their
+                  responses side by side.
+                </p>
+                <p className="text-xs text-zinc-600">
+                  {comparisonModels.length === 0
+                    ? "No models selected"
+                    : "Select at least one more model"}
+                </p>
+              </div>
+            </div>
+          ) : viewingFile ? (
+            /* Code Viewer */
+            <CodeViewer
+              filePath={viewingFile.path}
+              content={viewingFile.content}
+              onClose={() => setViewingFile(null)}
+            />
+          ) : activeConversationId && activeConversation ? (
+            /* Active Chat with Tool Panel + File Explorer */
+            <ActiveChatView
+              conversationId={activeConversationId}
+              model={selectedModel}
+              showToolCalls={showToolCalls}
+              showAgentPanel={showAgentPanel}
+              showFiles={showFiles}
+              workspaceId={activeConversation.workspaceId}
+              onFileSelect={handleFileSelect}
+            />
+          ) : (
+            /* Welcome screen */
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center text-zinc-500">
+                <Image
+                  src="/vocareum-logo.webp"
+                  alt="Vocareum"
+                  width={80}
+                  height={80}
+                  className="mx-auto mb-6"
+                />
+                <h2 className="text-2xl font-semibold text-zinc-300 mb-3">
+                  Vocareum AI Agent
+                </h2>
+                <p className="text-sm max-w-md mb-6">
+                  A general-purpose AI agent supporting Claude, GPT, and Gemini
+                  models. Create a conversation to get started.
+                </p>
+                <Button
+                  onClick={handleNewConversation}
+                  className="bg-indigo-400 hover:bg-indigo-500 text-zinc-950"
+                >
+                  Start New Conversation
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
-      </main>
+      </div>
+
+      {/* Settings Dialog */}
+      <SettingsDialog open={showSettings} onOpenChange={setShowSettings} />
     </div>
   );
 }
