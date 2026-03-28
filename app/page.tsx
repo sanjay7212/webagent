@@ -130,8 +130,8 @@ export default function Home() {
             {comparisonMode ? "✕ Exit Compare" : "⚖️ Compare"}
           </Button>
 
-          {/* Tool calls toggle (only in single chat mode) */}
-          {!comparisonMode && (
+          {/* Tool calls toggle (only when a conversation is active, not in comparison mode) */}
+          {!comparisonMode && activeConversationId && (
             <>
               <Button
                 variant="ghost"
