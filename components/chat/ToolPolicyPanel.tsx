@@ -89,7 +89,7 @@ function ConditionEditor({ toolName, conditions, onSave }: ConditionEditorProps)
             onBlur={() => onSave(localConditions)}
           />
           <button
-            className="text-gray-500 hover:text-red-400 shrink-0"
+            className="text-gray-500 hover:text-red-600 shrink-0"
             onClick={() => removeCondition(idx)}
           >
             ✕
@@ -217,7 +217,7 @@ export function ToolPolicyPanel() {
                   {currentPolicy === "conditional" && conditions.length > 0 && (
                     <Badge
                       variant="outline"
-                      className="text-xs bg-yellow-500/10 text-yellow-500 border-yellow-500/20 shrink-0"
+                      className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200 shrink-0"
                     >
                       {conditions.length} rule{conditions.length > 1 ? "s" : ""}
                     </Badge>

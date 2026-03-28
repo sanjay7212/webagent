@@ -29,7 +29,7 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
 
   if (providerEntries.length === 0) {
     return (
-      <div className="text-xs text-red-400 px-2">
+      <div className="text-xs text-red-600 px-2">
         No API keys configured
       </div>
     );

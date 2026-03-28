@@ -81,7 +81,7 @@ export const ComparisonChatColumn = forwardRef<
   const providerColor = model.startsWith("anthropic:")
     ? "text-orange-400 border-orange-400/30"
     : model.startsWith("openai:")
-      ? "text-green-400 border-green-400/30"
+      ? "text-green-600 border-green-400/30"
       : "text-blue-400 border-blue-400/30";
 
   // Prevent ancestor scroll

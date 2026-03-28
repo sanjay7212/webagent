@@ -65,7 +65,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
             {stats.byStatus.done > 0 && (
               <Badge
                 variant="outline"
-                className="text-xs bg-green-500/10 text-green-500 border-green-500/20"
+                className="text-xs bg-green-50 text-green-700 border-green-200"
               >
                 ✓ {stats.byStatus.done}
               </Badge>
@@ -81,7 +81,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
             {stats.byStatus.pending > 0 && (
               <Badge
                 variant="outline"
-                className="text-xs bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+                className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200"
               >
                 ⏳ {stats.byStatus.pending}
               </Badge>
@@ -89,7 +89,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
             {stats.byStatus.error > 0 && (
               <Badge
                 variant="outline"
-                className="text-xs bg-red-500/10 text-red-500 border-red-500/20"
+                className="text-xs bg-red-50 text-red-700 border-red-200"
               >
                 ✗ {stats.byStatus.error}
               </Badge>
@@ -142,7 +142,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                     <span>{getRiskIcon(risk)}</span>
                     <span>{meta.icon}</span>
                     <span className="font-mono text-gray-700">{name}</span>
-                    <span className="text-gray-400 truncate min-w-0">{meta.description}</span>
+                    <span className="text-gray-500 truncate min-w-0">{meta.description}</span>
                     <span className="ml-auto text-gray-400 shrink-0 font-mono">{policyTag}</span>
                   </div>
                 );

@@ -106,7 +106,7 @@ export function ConversationSidebar({
                     Rename
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    className="text-red-400 focus:bg-gray-200 focus:text-red-400"
+                    className="text-red-600 focus:bg-gray-200 focus:text-red-600"
                     onClick={(e) => {
                       e.stopPropagation();
                       onDelete(conv.id);

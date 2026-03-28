@@ -74,9 +74,9 @@ export function getRiskLevel(toolName: string): RiskLevel {
 
 export function getRiskColor(level: RiskLevel): string {
   switch (level) {
-    case "high": return "text-red-400";
-    case "medium": return "text-yellow-400";
-    case "low": return "text-green-400";
+    case "high": return "text-red-600";
+    case "medium": return "text-yellow-600";
+    case "low": return "text-green-600";
   }
 }
 

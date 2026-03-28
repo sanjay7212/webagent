@@ -54,11 +54,11 @@ export function ToolCallBlock({
   const meta = TOOL_META[toolName];
 
   const statusColor = isDone
-    ? "bg-green-500/10 text-green-500 border-green-500/20"
+    ? "bg-green-50 text-green-700 border-green-200"
     : isError
-      ? "bg-red-500/10 text-red-500 border-red-500/20"
+      ? "bg-red-50 text-red-700 border-red-200"
       : isPending
-        ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+        ? "bg-yellow-50 text-yellow-700 border-yellow-200"
         : "bg-[#5ba4b5]/10 text-[#5ba4b5] border-[#5ba4b5]/20";
 
   const statusText = isDone ? "Done" : isError ? "Error" : isPending ? "Pending" : "Running";
@@ -153,7 +153,7 @@ export function ToolCallBlock({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-green-600/30 text-green-400 hover:bg-green-600/10 text-xs ml-auto"
+                  className="border-green-600/30 text-green-600 hover:bg-green-600/10 text-xs ml-auto"
                   onClick={() => {
                     onApprove(toolCallId!);
                     onApproveRemember(toolCallId!, toolName, args);

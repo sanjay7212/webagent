@@ -17,8 +17,8 @@ const agentIcons: Record<string, string> = {
 
 const agentColors: Record<string, string> = {
   main: "text-[#5ba4b5] border-[#5ba4b5]/30 bg-[#5ba4b5]/10",
-  explorer: "text-cyan-400 border-cyan-400/30 bg-cyan-400/10",
-  planner: "text-amber-400 border-amber-400/30 bg-amber-400/10",
+  explorer: "text-cyan-600 border-cyan-600/30 bg-cyan-50",
+  planner: "text-amber-600 border-amber-600/30 bg-amber-50",
 };
 
 function StatusDot({ status }: { status: string }) {
@@ -240,7 +240,7 @@ export function AgentPanel({ messages }: AgentPanelProps) {
                   <p className="text-xs text-gray-500 mt-0.5 ml-6">{agent.description}</p>
                   <div className="flex gap-1 flex-wrap mt-1 ml-6">
                     {agent.tools.map((t) => (
-                      <span key={t} className="text-xs text-gray-400 font-mono">{t}</span>
+                      <span key={t} className="text-xs text-gray-600 font-mono">{t}</span>
                     ))}
                   </div>
                 </div>

@@ -71,7 +71,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     >
                       <span className="text-sm text-gray-800">{name}</span>
                       {groupedModels[key] ? (
-                        <Badge className="bg-green-500/10 text-green-400 border-green-500/20">
+                        <Badge className="bg-green-50 text-green-700 border-green-200">
                           Connected ({groupedModels[key].length} models)
                         </Badge>
                       ) : (
