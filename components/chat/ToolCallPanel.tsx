@@ -3,19 +3,15 @@
 import { useState, useRef, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { useToolCalls } from "@/lib/hooks/useToolCalls";
+import { useToolPolicies } from "@/lib/hooks/useToolPolicies";
+import {
+  TOOL_META,
+  getRiskLevel,
+  getRiskIcon,
+  getRiskColor,
+  getRiskBgColor,
+} from "@/lib/tools/permissions";
 import type { UIMessage } from "ai";
-
-const toolIcon: Record<string, string> = {
-  fileRead: "📄",
-  fileWrite: "✏️",
-  fileEdit: "🔧",
-  bash: "💻",
-  glob: "🔍",
-  grep: "🔎",
-  spawnAgent: "🤖",
-  memoryRead: "🧠",
-  memoryWrite: "🧠",
-};
 
 interface ToolCallPanelProps {
   messages: UIMessage[];
@@ -23,8 +19,22 @@ interface ToolCallPanelProps {
 
 export function ToolCallPanel({ messages }: ToolCallPanelProps) {
   const { toolCalls, stats } = useToolCalls(messages);
+  const { policies, activePreset } = useToolPolicies();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showInventory, setShowInventory] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const getPolicyLabel = (toolName: string): string => {
+    const policy = policies.find((p) => p.toolName === toolName);
+    if (!policy) return "";
+    const suffix = activePreset && activePreset !== "custom" ? ` (${activePreset})` : "";
+    switch (policy.policy) {
+      case "auto_approve": return `Auto-approved${suffix}`;
+      case "always_ask": return `Manual approval${suffix}`;
+      case "conditional": return `Conditional${suffix}`;
+      default: return "";
+    }
+  };
 
   // Auto-scroll to latest tool call
   useEffect(() => {
@@ -76,6 +86,14 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                 ⏳ {stats.byStatus.pending}
               </Badge>
             )}
+            {stats.byStatus.error > 0 && (
+              <Badge
+                variant="outline"
+                className="text-xs bg-red-500/10 text-red-500 border-red-500/20"
+              >
+                ✗ {stats.byStatus.error}
+              </Badge>
+            )}
           </div>
         )}
 
@@ -88,17 +106,53 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                 variant="outline"
                 className="text-xs bg-zinc-800 text-zinc-400 border-zinc-600"
               >
-                {toolIcon[name] || "🔧"} {name}: {count}
+                {TOOL_META[name]?.icon || "🔧"} {name}: {count}
               </Badge>
             ))}
+          </div>
+        )}
+
+        {/* Active policy indicator */}
+        {activePreset && (
+          <div className="mt-2 text-xs text-zinc-500">
+            Policy: <span className="text-zinc-400">{activePreset === "custom" ? "Custom" : activePreset}</span>
           </div>
         )}
       </div>
 
       {/* Tool call list */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto">
+        {/* Available Tools inventory */}
+        <div className="px-2 pt-2">
+          <button
+            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 mb-1.5 w-full text-left"
+            onClick={() => setShowInventory((v) => !v)}
+          >
+            <span>{showInventory ? "▼" : "▶"}</span>
+            <span className="font-medium">Available Tools ({Object.keys(TOOL_META).length})</span>
+          </button>
+          {showInventory && (
+            <div className="space-y-0.5 mb-3">
+              {Object.entries(TOOL_META).map(([name, meta]) => {
+                const risk = getRiskLevel(name);
+                const pol = policies.find((p) => p.toolName === name);
+                const policyTag = pol?.policy === "auto_approve" ? "auto" : pol?.policy === "always_ask" ? "ask" : pol?.policy === "conditional" ? "cond" : "—";
+                return (
+                  <div key={name} className="flex items-center gap-2 px-2 py-1 rounded bg-zinc-800/60 text-xs">
+                    <span>{getRiskIcon(risk)}</span>
+                    <span>{meta.icon}</span>
+                    <span className="font-mono text-zinc-300">{name}</span>
+                    <span className="text-zinc-600 truncate min-w-0">{meta.description}</span>
+                    <span className="ml-auto text-zinc-600 shrink-0 font-mono">{policyTag}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
         {toolCalls.length === 0 ? (
-          <div className="p-4 text-center text-zinc-500 text-sm">
+          <div className="px-4 pb-4 text-center text-zinc-500 text-sm">
             No tool calls yet. Send a message that requires the agent to
             take action (e.g., read a file, run a command).
           </div>
@@ -106,14 +160,17 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
           <div className="p-2 space-y-1">
             {toolCalls.map((tc) => {
               const isExpanded = expandedId === tc.toolCallId;
+              const risk = getRiskLevel(tc.toolName);
+              const riskColor = getRiskColor(risk);
               const statusColor =
-                tc.state === "result"
+                tc.state === "done"
                   ? "text-green-500"
-                  : tc.state === "call"
-                    ? "text-yellow-500"
-                    : "text-indigo-400";
+                  : tc.state === "error"
+                    ? "text-red-500"
+                    : tc.state === "pending"
+                      ? "text-yellow-500"
+                      : "text-indigo-400";
 
-              // One-line summary of key args
               const summary =
                 "file_path" in tc.args
                   ? String(tc.args.file_path)
@@ -124,6 +181,8 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                       : "pattern" in tc.args
                         ? String(tc.args.pattern)
                         : "";
+
+              const policyLabel = getPolicyLabel(tc.toolName);
 
               return (
                 <div
@@ -136,8 +195,9 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                       setExpandedId(isExpanded ? null : tc.toolCallId)
                     }
                   >
+                    <span className="text-xs shrink-0">{getRiskIcon(risk)}</span>
                     <span className="text-xs shrink-0">
-                      {toolIcon[tc.toolName] || "🔧"}
+                      {TOOL_META[tc.toolName]?.icon || "🔧"}
                     </span>
                     <span className="font-mono text-xs text-zinc-200 shrink-0">
                       {tc.toolName}
@@ -148,11 +208,13 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                       </span>
                     )}
                     <span className={`ml-auto text-xs shrink-0 ${statusColor}`}>
-                      {tc.state === "result"
+                      {tc.state === "done"
                         ? "✓"
-                        : tc.state === "call"
-                          ? "⏳"
-                          : "◉"}
+                        : tc.state === "error"
+                          ? "✗"
+                          : tc.state === "pending"
+                            ? "⏳"
+                            : "◉"}
                     </span>
                     <span className="text-zinc-600 text-xs shrink-0">
                       {isExpanded ? "▼" : "▶"}
@@ -161,19 +223,28 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
 
                   {isExpanded && (
                     <div className="px-2.5 pb-2 border-t border-zinc-700/50">
+                      {/* Audit: risk + policy */}
+                      <div className="flex items-center gap-2 mt-1.5 mb-1.5">
+                        <Badge
+                          variant="outline"
+                          className={`text-xs ${getRiskBgColor(risk)} ${riskColor}`}
+                        >
+                          {risk} risk
+                        </Badge>
+                        {policyLabel && (
+                          <span className="text-xs text-zinc-500">{policyLabel}</span>
+                        )}
+                      </div>
+
                       <div className="mt-1.5">
-                        <div className="text-xs text-zinc-500 mb-0.5">
-                          Input
-                        </div>
+                        <div className="text-xs text-zinc-500 mb-0.5">Input</div>
                         <pre className="text-xs bg-zinc-900 p-1.5 rounded overflow-auto max-h-32 text-zinc-300">
                           {JSON.stringify(tc.args, null, 2)}
                         </pre>
                       </div>
                       {tc.result !== undefined && (
                         <div className="mt-1.5">
-                          <div className="text-xs text-zinc-500 mb-0.5">
-                            Output
-                          </div>
+                          <div className="text-xs text-zinc-500 mb-0.5">Output</div>
                           <pre className="text-xs bg-zinc-900 p-1.5 rounded overflow-auto max-h-40 whitespace-pre-wrap text-zinc-300">
                             {typeof tc.result === "string"
                               ? tc.result

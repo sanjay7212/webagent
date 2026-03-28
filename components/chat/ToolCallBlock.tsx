@@ -3,7 +3,16 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { requiresApproval } from "@/lib/tools/permissions";
+import {
+  requiresApprovalWithPolicy,
+  requiresApproval,
+  getRiskLevel,
+  getRiskIcon,
+  getRiskColor,
+  getRiskBgColor,
+  TOOL_META,
+  type ClientToolPolicy,
+} from "@/lib/tools/permissions";
 
 interface ToolCallBlockProps {
   toolName: string;
@@ -11,8 +20,10 @@ interface ToolCallBlockProps {
   state: string;
   result?: unknown;
   toolCallId?: string;
+  policies?: ClientToolPolicy[];
   onApprove?: (toolCallId: string) => void;
   onDeny?: (toolCallId: string) => void;
+  onApproveRemember?: (toolCallId: string, toolName: string, args: Record<string, unknown>) => void;
 }
 
 export function ToolCallBlock({
@@ -21,42 +32,62 @@ export function ToolCallBlock({
   state,
   result,
   toolCallId,
+  policies,
   onApprove,
   onDeny,
+  onApproveRemember,
 }: ToolCallBlockProps) {
   const [expanded, setExpanded] = useState(false);
-  const needsApproval =
-    requiresApproval(toolName) && state === "call" && toolCallId;
 
-  const statusColor =
-    state === "result"
-      ? "bg-green-500/10 text-green-500 border-green-500/20"
-      : state === "call"
+  // Normalize state for both old ("call"/"result") and new ("input-available"/"output-available") SDK states
+  const isDone = state === "output-available" || state === "result";
+  const isPending = state === "approval-requested" || state === "call" || state === "input-available";
+  const isError = state === "output-error";
+
+  const needsApproval = policies
+    ? requiresApprovalWithPolicy(toolName, args, policies) && isPending && toolCallId
+    : requiresApproval(toolName) && isPending && toolCallId;
+
+  const risk = getRiskLevel(toolName);
+  const riskColor = getRiskColor(risk);
+  const riskBg = getRiskBgColor(risk);
+  const meta = TOOL_META[toolName];
+
+  const statusColor = isDone
+    ? "bg-green-500/10 text-green-500 border-green-500/20"
+    : isError
+      ? "bg-red-500/10 text-red-500 border-red-500/20"
+      : isPending
         ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
         : "bg-indigo-400/10 text-indigo-400 border-indigo-400/20";
 
-  const statusText =
-    state === "result" ? "Done" : state === "call" ? "Pending" : "Running";
+  const statusText = isDone ? "Done" : isError ? "Error" : isPending ? "Pending" : "Running";
 
-  const toolIcon: Record<string, string> = {
-    fileRead: "📄",
-    fileWrite: "✏️",
-    fileEdit: "🔧",
-    bash: "💻",
-    glob: "🔍",
-    grep: "🔎",
-    spawnAgent: "🤖",
-    memoryRead: "🧠",
-    memoryWrite: "🧠",
-  };
+  // Determine policy attribution
+  const policyInfo = policies?.find((p) => p.toolName === toolName);
+  const policyLabel = policyInfo
+    ? policyInfo.policy === "auto_approve"
+      ? "Auto-approved"
+      : policyInfo.policy === "always_ask"
+        ? "Requires approval"
+        : "Conditional"
+    : isDone
+      ? "Completed"
+      : "";
 
   return (
-    <div className="border border-zinc-700 rounded-lg my-2 bg-zinc-800/50 overflow-hidden">
+    <div className={`border rounded-lg my-2 bg-zinc-800/50 overflow-hidden ${
+      needsApproval ? "border-yellow-500/40 shadow-sm shadow-yellow-500/10" : "border-zinc-700"
+    }`}>
       <button
         className="flex items-center gap-2 px-3 py-2 w-full text-left hover:bg-zinc-700/30 transition-colors"
         onClick={() => setExpanded(!expanded)}
       >
-        <span className="text-sm">{toolIcon[toolName] || "🔧"}</span>
+        {/* Risk indicator */}
+        <span className="text-xs shrink-0" title={`Risk: ${risk}`}>
+          {getRiskIcon(risk)}
+        </span>
+        <span className="text-sm shrink-0">{meta?.icon || "🔧"}</span>
         <span className="font-mono text-sm text-zinc-200">{toolName}</span>
         {"file_path" in args && args.file_path ? (
           <span className="text-xs text-zinc-400 truncate">
@@ -81,7 +112,19 @@ export function ToolCallBlock({
 
       {expanded && (
         <div className="px-3 pb-3 border-t border-zinc-700">
-          <div className="mt-2">
+          {/* Risk + Policy info bar */}
+          <div className="flex items-center gap-2 mt-2 mb-2">
+            <Badge variant="outline" className={`text-xs ${riskBg} ${riskColor}`}>
+              {risk} risk
+            </Badge>
+            {policyLabel && (
+              <span className="text-xs text-zinc-500">
+                Policy: {policyLabel}
+              </span>
+            )}
+          </div>
+
+          <div>
             <div className="text-xs text-zinc-400 mb-1">Parameters</div>
             <pre className="text-xs bg-zinc-900 p-2 rounded overflow-auto max-h-40">
               {JSON.stringify(args, null, 2)}
@@ -89,22 +132,36 @@ export function ToolCallBlock({
           </div>
 
           {needsApproval && onApprove && onDeny && (
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-2 mt-3 p-2 rounded-lg bg-yellow-500/5 border border-yellow-500/20">
               <Button
                 size="sm"
                 variant="default"
-                className="bg-green-600 hover:bg-green-700"
-                onClick={() => onApprove(toolCallId)}
+                className="bg-green-600 hover:bg-green-700 text-xs"
+                onClick={() => onApprove(toolCallId!)}
               >
                 Approve
               </Button>
               <Button
                 size="sm"
                 variant="destructive"
-                onClick={() => onDeny(toolCallId)}
+                className="text-xs"
+                onClick={() => onDeny(toolCallId!)}
               >
                 Deny
               </Button>
+              {onApproveRemember && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-green-600/30 text-green-400 hover:bg-green-600/10 text-xs ml-auto"
+                  onClick={() => {
+                    onApprove(toolCallId!);
+                    onApproveRemember(toolCallId!, toolName, args);
+                  }}
+                >
+                  Approve & Remember
+                </Button>
+              )}
             </div>
           )}
 

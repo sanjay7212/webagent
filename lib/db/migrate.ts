@@ -35,6 +35,13 @@ export function runMigrations() {
 
     CREATE INDEX IF NOT EXISTS idx_messages_conversation_id ON messages(conversation_id);
     CREATE INDEX IF NOT EXISTS idx_messages_created_at ON messages(created_at);
+
+    CREATE TABLE IF NOT EXISTS tool_policies (
+      tool_name TEXT PRIMARY KEY,
+      policy TEXT NOT NULL DEFAULT 'auto_approve' CHECK(policy IN ('auto_approve', 'always_ask', 'conditional')),
+      conditions TEXT,
+      updated_at INTEGER NOT NULL
+    );
   `);
 
   sqlite.close();

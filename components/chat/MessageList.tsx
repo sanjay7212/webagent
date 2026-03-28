@@ -4,12 +4,18 @@ import { useEffect, useRef } from "react";
 import { MessageBubble } from "./MessageBubble";
 import type { UIMessage } from "ai";
 
+import type { ClientToolPolicy } from "@/lib/tools/permissions";
+
 interface MessageListProps {
   messages: UIMessage[];
   isLoading?: boolean;
+  policies?: ClientToolPolicy[];
+  onApprove?: (toolCallId: string) => void;
+  onDeny?: (toolCallId: string) => void;
+  onApproveRemember?: (toolCallId: string, toolName: string, args: Record<string, unknown>) => void;
 }
 
-export function MessageList({ messages, isLoading }: MessageListProps) {
+export function MessageList({ messages, isLoading, policies, onApprove, onDeny, onApproveRemember }: MessageListProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,7 +46,14 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
     <div ref={scrollRef} className="flex-1 overflow-y-auto min-h-0">
       <div className="max-w-4xl mx-auto px-4 py-6">
         {messages.map((message) => (
-          <MessageBubble key={message.id} message={message} />
+          <MessageBubble
+              key={message.id}
+              message={message}
+              policies={policies}
+              onApprove={onApprove}
+              onDeny={onDeny}
+              onApproveRemember={onApproveRemember}
+            />
         ))}
         {isLoading && (
           <div className="flex justify-start mb-4">

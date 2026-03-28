@@ -105,7 +105,7 @@ export function useAgentInvocations(messages: UIMessage[]) {
               const agentName = args.agent || "unknown";
               const task = args.task || "";
 
-              if (toolPart.state === "result" && toolPart.output) {
+              if ((toolPart.state === "result" || toolPart.state === "output-available") && toolPart.output) {
                 const outputStr =
                   typeof toolPart.output === "string"
                     ? toolPart.output
@@ -179,7 +179,7 @@ export function useAgentInvocations(messages: UIMessage[]) {
             m.parts.some(
               (p) =>
                 (p.type === "dynamic-tool" || p.type.startsWith("tool-")) &&
-                (p as any).state !== "result"
+                (p as any).state !== "result" && (p as any).state !== "output-available"
             )
         )
           ? "running"

@@ -7,6 +7,7 @@ import { ChatPanel } from "./ChatPanel";
 import { ToolCallPanel } from "./ToolCallPanel";
 import { AgentPanel } from "./AgentPanel";
 import { FileExplorer } from "@/components/sidebar/FileExplorer";
+import { useToolPolicies } from "@/lib/hooks/useToolPolicies";
 
 interface ActiveChatViewProps {
   conversationId: string;
@@ -28,6 +29,7 @@ export function ActiveChatView({
   onFileSelect,
 }: ActiveChatViewProps) {
   const [input, setInput] = useState("");
+  const { policies, approveAndRemember } = useToolPolicies();
 
   const { messages, sendMessage, status, stop } = useChat({
     id: conversationId,
@@ -57,6 +59,36 @@ export function ActiveChatView({
     []
   );
 
+  const handleApprove = useCallback(async (toolCallId: string) => {
+    await fetch("/api/chat/approve", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ toolCallId, approved: true }),
+    });
+  }, []);
+
+  const handleDeny = useCallback(async (toolCallId: string) => {
+    await fetch("/api/chat/approve", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ toolCallId, approved: false }),
+    });
+  }, []);
+
+  const handleApproveRemember = useCallback(
+    async (toolCallId: string, toolName: string, args: Record<string, unknown>) => {
+      // Approve the current call
+      await fetch("/api/chat/approve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ toolCallId, approved: true }),
+      });
+      // Remember: auto-approve this tool in the future
+      await approveAndRemember(toolName, args);
+    },
+    [approveAndRemember]
+  );
+
   // Prevent ancestor scroll — browser focus/scroll events can push
   // overflow:hidden parents off-screen
   const containerRef = useRef<HTMLDivElement>(null);
@@ -84,6 +116,10 @@ export function ActiveChatView({
           onChange={handleChange}
           onSubmit={handleSubmit}
           onStop={stop}
+          policies={policies}
+          onApprove={handleApprove}
+          onDeny={handleDeny}
+          onApproveRemember={handleApproveRemember}
         />
       </div>
 

@@ -3,12 +3,17 @@
 import { StreamingText } from "./StreamingText";
 import { ToolCallBlock } from "./ToolCallBlock";
 import type { UIMessage } from "ai";
+import type { ClientToolPolicy } from "@/lib/tools/permissions";
 
 interface MessageBubbleProps {
   message: UIMessage;
+  policies?: ClientToolPolicy[];
+  onApprove?: (toolCallId: string) => void;
+  onDeny?: (toolCallId: string) => void;
+  onApproveRemember?: (toolCallId: string, toolName: string, args: Record<string, unknown>) => void;
 }
 
-export function MessageBubble({ message }: MessageBubbleProps) {
+export function MessageBubble({ message, policies, onApprove, onDeny, onApproveRemember }: MessageBubbleProps) {
   const isUser = message.role === "user";
 
   return (
@@ -61,6 +66,10 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                 state={toolPart.state}
                 result={toolPart.output}
                 toolCallId={toolPart.toolCallId}
+                policies={policies}
+                onApprove={onApprove}
+                onDeny={onDeny}
+                onApproveRemember={onApproveRemember}
               />
             );
           }

@@ -149,8 +149,33 @@ interface AgentPanelProps {
   messages: UIMessage[];
 }
 
+const AVAILABLE_AGENTS = [
+  {
+    name: "main",
+    icon: "🎯",
+    label: "Default Agent",
+    description: "General-purpose agent for executing tasks, writing files, and running commands",
+    tools: ["fileRead", "fileWrite", "fileEdit", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
+  },
+  {
+    name: "explorer",
+    icon: "🔍",
+    label: "Explorer Agent",
+    description: "Research and discovery — finds files, searches content, gathers information",
+    tools: ["fileRead", "glob", "grep", "memoryRead"],
+  },
+  {
+    name: "planner",
+    icon: "📋",
+    label: "Planner Agent",
+    description: "Planning and strategy — designs approaches for complex multi-step tasks",
+    tools: ["fileRead", "glob", "grep", "memoryRead"],
+  },
+];
+
 export function AgentPanel({ messages }: AgentPanelProps) {
   const { invocations, stats } = useAgentInvocations(messages);
+  const [showInventory, setShowInventory] = useState(true);
 
   return (
     <div className="flex flex-col h-full bg-zinc-900 border-l border-zinc-700">
@@ -189,8 +214,43 @@ export function AgentPanel({ messages }: AgentPanelProps) {
 
       {/* Invocation list */}
       <div className="flex-1 overflow-y-auto">
+        {/* Available Agents inventory */}
+        <div className="px-2 pt-2">
+          <button
+            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 mb-1.5 w-full text-left"
+            onClick={() => setShowInventory((v) => !v)}
+          >
+            <span>{showInventory ? "▼" : "▶"}</span>
+            <span className="font-medium">Available Agents ({AVAILABLE_AGENTS.length})</span>
+          </button>
+          {showInventory && (
+            <div className="space-y-1 mb-3">
+              {AVAILABLE_AGENTS.map((agent) => (
+                <div key={agent.name} className="px-2 py-1.5 rounded bg-zinc-800/60">
+                  <div className="flex items-center gap-2 text-xs">
+                    <span>{agent.icon}</span>
+                    <span className="font-medium text-zinc-200">{agent.label}</span>
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ml-auto ${agentColors[agent.name] || "text-zinc-400 border-zinc-600 bg-zinc-800"}`}
+                    >
+                      {agent.name}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-zinc-500 mt-0.5 ml-6">{agent.description}</p>
+                  <div className="flex gap-1 flex-wrap mt-1 ml-6">
+                    {agent.tools.map((t) => (
+                      <span key={t} className="text-xs text-zinc-600 font-mono">{t}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {invocations.length === 0 ? (
-          <div className="p-4 text-center text-zinc-500 text-sm">
+          <div className="px-4 pb-4 text-center text-zinc-500 text-sm">
             No agent activity yet. The agent will appear here when it starts
             processing your request, including any sub-agents it spawns.
           </div>

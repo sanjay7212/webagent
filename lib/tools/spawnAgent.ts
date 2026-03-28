@@ -89,8 +89,8 @@ export function spawnAgentTool(workspaceId: string, modelId: string) {
             tools: Array.from(toolsUsed),
             toolCallCount,
             estimatedTokens: {
-              prompt: totalUsage.promptTokens || Math.ceil(userContent.length / 4),
-              completion: totalUsage.completionTokens || Math.ceil(fullText.length / 4),
+              prompt: totalUsage.inputTokens || Math.ceil(userContent.length / 4),
+              completion: totalUsage.outputTokens || Math.ceil(fullText.length / 4),
               total: totalUsage.totalTokens || Math.ceil((userContent.length + fullText.length) / 4),
             },
           };

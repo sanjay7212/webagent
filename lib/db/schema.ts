@@ -25,3 +25,14 @@ export const settings = sqliteTable("settings", {
   key: text("key").primaryKey(),
   value: text("value").notNull(),
 });
+
+export const toolPolicies = sqliteTable("tool_policies", {
+  toolName: text("tool_name").primaryKey(),
+  policy: text("policy", {
+    enum: ["auto_approve", "always_ask", "conditional"],
+  })
+    .notNull()
+    .default("auto_approve"),
+  conditions: text("conditions"), // JSON string of condition rules
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});

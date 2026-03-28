@@ -52,13 +52,12 @@ export async function POST(req: Request) {
             system: systemPrompt,
             messages: modelMessages,
             tools,
-            maxSteps: 10,
-            // Gemini 2.5 Pro requires thinking mode - no budget restriction
+            stopWhen: stepCountIs(10),
           });
 
           // Write text as a single delta chunk
           if (result.text) {
-            writer.write({ type: "text-delta", textDelta: result.text });
+            writer.write({ type: "text-delta", delta: result.text, id: "g-0" });
           }
 
           // Update conversation timestamp
@@ -70,7 +69,8 @@ export async function POST(req: Request) {
           console.error(`[chat] Google generateText error:`, error);
           writer.write({
             type: "text-delta",
-            textDelta: `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
+            delta: `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
+            id: "g-err",
           });
         }
       },

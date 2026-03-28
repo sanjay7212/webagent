@@ -29,4 +29,5 @@ export function createTools(workspaceId: string, modelId?: string) {
   return base;
 }
 
-export { requiresApproval, AUTO_APPROVED_TOOLS } from "./permissions";
+export { requiresApproval, requiresApprovalWithPolicy, TOOL_META, ALL_TOOL_NAMES } from "./permissions";
+export type { ClientToolPolicy, PolicyLevel, RiskLevel } from "./permissions";
