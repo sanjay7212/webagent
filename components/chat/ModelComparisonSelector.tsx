@@ -44,24 +44,24 @@ export function ModelComparisonSelector({
       <Button
         variant="ghost"
         size="sm"
-        className="text-zinc-300 hover:text-zinc-100 border border-zinc-700 bg-zinc-800"
+        className="text-gray-700 hover:text-gray-900 border border-gray-200 bg-gray-100"
         onClick={() => setOpen(!open)}
       >
         {selected.length === 0
           ? "Select models..."
           : `${selected.length} model${selected.length > 1 ? "s" : ""} selected`}
-        <span className="ml-1 text-zinc-500">▼</span>
+        <span className="ml-1 text-gray-500">▼</span>
       </Button>
 
       {open && (
-        <div className="absolute top-full mt-1 right-0 w-72 bg-zinc-800 border border-zinc-700 rounded-lg shadow-xl z-50 overflow-hidden">
-          <div className="p-2 border-b border-zinc-700 text-xs text-zinc-500">
+        <div className="absolute top-full mt-1 right-0 w-72 bg-gray-100 border border-gray-200 rounded-lg shadow-xl z-50 overflow-hidden">
+          <div className="p-2 border-b border-gray-200 text-xs text-gray-500">
             Select up to 3 models to compare
           </div>
           <div className="max-h-64 overflow-y-auto p-1">
             {Object.entries(groupedModels).map(([provider, models]) => (
               <div key={provider}>
-                <div className="px-2 py-1 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+                <div className="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   {provider}
                 </div>
                 {models.map((model) => {
@@ -75,20 +75,20 @@ export function ModelComparisonSelector({
                         isDisabled
                           ? "opacity-40 cursor-not-allowed"
                           : "hover:bg-zinc-700/50 cursor-pointer"
-                      } ${isSelected ? "bg-indigo-400/10" : ""}`}
+                      } ${isSelected ? "bg-[#5ba4b5]/10" : ""}`}
                       onClick={() => !isDisabled && toggleModel(model.id)}
                       disabled={isDisabled}
                     >
                       <span
                         className={`w-4 h-4 rounded border flex items-center justify-center text-xs ${
                           isSelected
-                            ? "bg-indigo-400 border-indigo-400 text-white"
-                            : "border-zinc-600"
+                            ? "bg-[#5ba4b5] border-[#5ba4b5] text-white"
+                            : "border-gray-300"
                         }`}
                       >
                         {isSelected ? "✓" : ""}
                       </span>
-                      <span className="text-zinc-200">{model.name}</span>
+                      <span className="text-gray-800">{model.name}</span>
                     </button>
                   );
                 })}
@@ -96,12 +96,12 @@ export function ModelComparisonSelector({
             ))}
           </div>
           {selected.length > 0 && (
-            <div className="p-2 border-t border-zinc-700 flex flex-wrap gap-1">
+            <div className="p-2 border-t border-gray-200 flex flex-wrap gap-1">
               {selected.map((id) => (
                 <Badge
                   key={id}
                   variant="outline"
-                  className="text-xs bg-indigo-400/10 text-indigo-400 border-indigo-400/20 cursor-pointer"
+                  className="text-xs bg-[#5ba4b5]/10 text-[#5ba4b5] border-[#5ba4b5]/20 cursor-pointer"
                   onClick={() => toggleModel(id)}
                 >
                   {id.split(":").pop()} ✕

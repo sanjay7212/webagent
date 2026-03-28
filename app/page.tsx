@@ -95,11 +95,11 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0">
         {/* Header */}
-        <header className="flex items-center gap-3 px-4 py-2 border-b border-zinc-700 bg-zinc-900">
+        <header className="flex items-center gap-3 px-4 py-2 border-b border-gray-200 bg-[#2c3e50] text-white">
           <Button
             variant="ghost"
             size="sm"
-            className="text-zinc-400 hover:text-zinc-200"
+            className="text-white/70 hover:text-white hover:bg-white/10"
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
             {sidebarOpen ? "◀" : "▶"}
@@ -112,7 +112,7 @@ export default function Home() {
               width={24}
               height={24}
             />
-            <h1 className="text-sm font-semibold text-zinc-200">
+            <h1 className="text-sm font-semibold text-white">
               Vocareum Agent
             </h1>
           </div>
@@ -135,8 +135,8 @@ export default function Home() {
             size="sm"
             className={
               comparisonMode
-                ? "bg-red-500/20 text-red-400 hover:bg-red-500/30 hover:text-red-300"
-                : "text-zinc-400 hover:text-zinc-200"
+                ? "bg-red-500/20 text-red-300 hover:bg-red-500/30"
+                : "text-white/70 hover:text-white hover:bg-white/10"
             }
             onClick={handleToggleComparison}
           >
@@ -149,8 +149,8 @@ export default function Home() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`text-zinc-400 hover:text-zinc-200 ${
-                  showToolCalls ? "bg-zinc-700" : ""
+                className={`hover:bg-white/10 ${
+                  showToolCalls ? "bg-white/20 text-white" : "text-white/70 hover:text-white"
                 }`}
                 onClick={() => setShowToolCalls(!showToolCalls)}
               >
@@ -159,8 +159,8 @@ export default function Home() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`text-zinc-400 hover:text-zinc-200 ${
-                  showAgentPanel ? "bg-zinc-700" : ""
+                className={`hover:bg-white/10 ${
+                  showAgentPanel ? "bg-white/20 text-white" : "text-white/70 hover:text-white"
                 }`}
                 onClick={() => setShowAgentPanel(!showAgentPanel)}
               >
@@ -172,8 +172,8 @@ export default function Home() {
           <Button
             variant="ghost"
             size="sm"
-            className={`text-zinc-400 hover:text-zinc-200 ${
-              showFiles ? "bg-zinc-700" : ""
+            className={`hover:bg-white/10 ${
+              showFiles ? "bg-white/20 text-white" : "text-white/70 hover:text-white"
             }`}
             onClick={() => setShowFiles(!showFiles)}
           >
@@ -183,7 +183,7 @@ export default function Home() {
           <Button
             variant="ghost"
             size="sm"
-            className="text-zinc-400 hover:text-zinc-200"
+            className="text-white/70 hover:text-white hover:bg-white/10"
             onClick={() => setShowSettings(true)}
           >
             ⚙️
@@ -200,17 +200,17 @@ export default function Home() {
             />
           ) : comparisonMode ? (
             /* Comparison mode but not enough models selected */
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center text-zinc-500">
+            <div className="flex-1 flex items-center justify-center bg-white">
+              <div className="text-center text-gray-500">
                 <div className="text-4xl mb-4">⚖️</div>
-                <h2 className="text-xl font-semibold text-zinc-300 mb-2">
+                <h2 className="text-xl font-semibold text-gray-700 mb-2">
                   Model Comparison
                 </h2>
                 <p className="text-sm max-w-md mb-2">
                   Select 2-3 models from the dropdown above to compare their
                   responses side by side.
                 </p>
-                <p className="text-xs text-zinc-600">
+                <p className="text-xs text-gray-400">
                   {comparisonModels.length === 0
                     ? "No models selected"
                     : "Select at least one more model"}
@@ -237,8 +237,8 @@ export default function Home() {
             />
           ) : (
             /* Welcome screen */
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center text-zinc-500">
+            <div className="flex-1 flex items-center justify-center bg-white">
+              <div className="text-center text-gray-500">
                 <Image
                   src="/vocareum-logo.webp"
                   alt="Vocareum"
@@ -246,16 +246,16 @@ export default function Home() {
                   height={80}
                   className="mx-auto mb-6"
                 />
-                <h2 className="text-2xl font-semibold text-zinc-300 mb-3">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-3">
                   Vocareum AI Agent
                 </h2>
-                <p className="text-sm max-w-md mb-6">
+                <p className="text-sm max-w-md mb-6 text-gray-500">
                   A general-purpose AI agent supporting Claude, GPT, and Gemini
                   models. Create a conversation to get started.
                 </p>
                 <Button
                   onClick={handleNewConversation}
-                  className="bg-indigo-400 hover:bg-indigo-500 text-zinc-950"
+                  className="bg-[#5ba4b5] hover:bg-[#4a8fa0] text-white"
                 >
                   Start New Conversation
                 </Button>

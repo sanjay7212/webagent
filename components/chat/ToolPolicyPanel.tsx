@@ -64,7 +64,7 @@ function ConditionEditor({ toolName, conditions, onSave }: ConditionEditorProps)
       {localConditions.map((cond, idx) => (
         <div key={idx} className="flex items-center gap-1.5 text-xs">
           <select
-            className="bg-zinc-800 border border-zinc-600 rounded px-1.5 py-1 text-zinc-300"
+            className="bg-gray-100 border border-gray-300 rounded px-1.5 py-1 text-gray-700"
             value={cond.field}
             onChange={(e) => updateCondition(idx, "field", e.target.value)}
           >
@@ -73,7 +73,7 @@ function ConditionEditor({ toolName, conditions, onSave }: ConditionEditorProps)
             ))}
           </select>
           <select
-            className="bg-zinc-800 border border-zinc-600 rounded px-1.5 py-1 text-zinc-300"
+            className="bg-gray-100 border border-gray-300 rounded px-1.5 py-1 text-gray-700"
             value={cond.operator}
             onChange={(e) => updateCondition(idx, "operator", e.target.value)}
           >
@@ -82,14 +82,14 @@ function ConditionEditor({ toolName, conditions, onSave }: ConditionEditorProps)
             <option value="matches_regex">regex</option>
           </select>
           <input
-            className="flex-1 bg-zinc-800 border border-zinc-600 rounded px-1.5 py-1 text-zinc-300 min-w-0"
+            className="flex-1 bg-gray-100 border border-gray-300 rounded px-1.5 py-1 text-gray-700 min-w-0"
             value={cond.value}
             placeholder="value..."
             onChange={(e) => updateCondition(idx, "value", e.target.value)}
             onBlur={() => onSave(localConditions)}
           />
           <button
-            className="text-zinc-500 hover:text-red-400 shrink-0"
+            className="text-gray-500 hover:text-red-400 shrink-0"
             onClick={() => removeCondition(idx)}
           >
             ✕
@@ -97,7 +97,7 @@ function ConditionEditor({ toolName, conditions, onSave }: ConditionEditorProps)
         </div>
       ))}
       <button
-        className="text-xs text-indigo-400 hover:text-indigo-300"
+        className="text-xs text-[#5ba4b5] hover:text-indigo-300"
         onClick={addCondition}
       >
         + Add condition
@@ -120,7 +120,7 @@ export function ToolPolicyPanel() {
 
   if (loading) {
     return (
-      <div className="p-4 text-center text-zinc-500 text-sm">
+      <div className="p-4 text-center text-gray-500 text-sm">
         Loading policies...
       </div>
     );
@@ -132,7 +132,7 @@ export function ToolPolicyPanel() {
     <div className="space-y-4">
       {/* Presets */}
       <div>
-        <div className="text-xs text-zinc-400 mb-2 font-medium uppercase tracking-wider">
+        <div className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wider">
           Presets
         </div>
         <div className="flex gap-2">
@@ -143,8 +143,8 @@ export function ToolPolicyPanel() {
               variant={activePreset === preset.id ? "default" : "outline"}
               className={
                 activePreset === preset.id
-                  ? "bg-indigo-500 hover:bg-indigo-600 text-white text-xs"
-                  : "border-zinc-600 text-zinc-400 hover:text-zinc-200 text-xs"
+                  ? "bg-[#5ba4b5] hover:bg-[#4a8fa0] text-white text-xs"
+                  : "border-gray-300 text-gray-500 hover:text-gray-800 text-xs"
               }
               onClick={() => applyPreset(preset.id)}
             >
@@ -153,18 +153,18 @@ export function ToolPolicyPanel() {
           ))}
         </div>
         {activePreset && activePreset !== "custom" && (
-          <p className="text-xs text-zinc-500 mt-1.5">
+          <p className="text-xs text-gray-500 mt-1.5">
             {presets.find((p) => p.id === activePreset)?.description}
           </p>
         )}
         {activePreset === "custom" && (
-          <p className="text-xs text-zinc-500 mt-1.5">Custom configuration</p>
+          <p className="text-xs text-gray-500 mt-1.5">Custom configuration</p>
         )}
       </div>
 
       {/* Tool policies table */}
       <div>
-        <div className="text-xs text-zinc-400 mb-2 font-medium uppercase tracking-wider">
+        <div className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wider">
           Per-Tool Policies
         </div>
         <div className="space-y-1">
@@ -179,7 +179,7 @@ export function ToolPolicyPanel() {
             return (
               <div
                 key={toolName}
-                className="bg-zinc-800 rounded-lg border border-zinc-700/50 overflow-hidden"
+                className="bg-gray-100 rounded-lg border border-gray-200 overflow-hidden"
               >
                 <div className="flex items-center gap-2 px-3 py-2">
                   {/* Risk + icon */}
@@ -190,7 +190,7 @@ export function ToolPolicyPanel() {
 
                   {/* Name */}
                   <button
-                    className="text-xs text-zinc-200 font-mono hover:text-white min-w-[80px] text-left"
+                    className="text-xs text-gray-800 font-mono hover:text-white min-w-[80px] text-left"
                     onClick={() => setExpandedTool(isExpanded ? null : toolName)}
                   >
                     {toolName}
@@ -198,7 +198,7 @@ export function ToolPolicyPanel() {
 
                   {/* Policy selector */}
                   <select
-                    className="ml-auto bg-zinc-700 border border-zinc-600 rounded px-2 py-1 text-xs text-zinc-300 shrink-0"
+                    className="ml-auto bg-gray-200 border border-gray-300 rounded px-2 py-1 text-xs text-gray-700 shrink-0"
                     value={currentPolicy}
                     onChange={(e) => {
                       const newPolicy = e.target.value as PolicyLevel;
@@ -225,7 +225,7 @@ export function ToolPolicyPanel() {
 
                   {/* Expand arrow */}
                   <button
-                    className="text-zinc-500 text-xs shrink-0"
+                    className="text-gray-500 text-xs shrink-0"
                     onClick={() => setExpandedTool(isExpanded ? null : toolName)}
                   >
                     {isExpanded ? "▼" : "▶"}
@@ -234,8 +234,8 @@ export function ToolPolicyPanel() {
 
                 {/* Expanded: description + conditions */}
                 {isExpanded && (
-                  <div className="px-3 pb-3 border-t border-zinc-700/50">
-                    <p className="text-xs text-zinc-500 mt-2">{meta.description}</p>
+                  <div className="px-3 pb-3 border-t border-gray-200">
+                    <p className="text-xs text-gray-500 mt-2">{meta.description}</p>
                     {currentPolicy === "conditional" && (
                       <ConditionEditor
                         toolName={toolName}

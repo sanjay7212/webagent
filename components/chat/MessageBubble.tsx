@@ -21,13 +21,13 @@ export function MessageBubble({ message, policies, onApprove, onDeny, onApproveR
       <div
         className={`max-w-[85%] ${
           isUser
-            ? "bg-indigo-400/90 text-white rounded-2xl rounded-br-md px-4 py-2"
-            : "bg-zinc-800 text-zinc-100 rounded-2xl rounded-bl-md px-4 py-3"
+            ? "bg-[#5ba4b5] text-white rounded-2xl rounded-br-md px-4 py-2"
+            : "bg-gray-100 text-gray-900 rounded-2xl rounded-bl-md px-4 py-3"
         }`}
       >
         {/* Role indicator */}
         <div
-          className={`text-xs mb-1 ${isUser ? "text-indigo-200" : "text-zinc-400"}`}
+          className={`text-xs mb-1 ${isUser ? "text-white/80" : "text-gray-500"}`}
         >
           {isUser ? "You" : "Assistant"}
         </div>

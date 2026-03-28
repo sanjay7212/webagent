@@ -101,7 +101,7 @@ export function ComparisonView({
 
   if (!ready) {
     return (
-      <div className="flex-1 flex items-center justify-center text-zinc-500">
+      <div className="flex-1 flex items-center justify-center text-gray-500">
         <div className="text-center">
           <div className="animate-pulse text-lg mb-2">⚖️</div>
           <p className="text-sm">
@@ -124,7 +124,7 @@ export function ComparisonView({
             <div
               key={modelId}
               className={`flex-1 flex flex-col min-w-0 min-h-0 ${
-                idx < models.length - 1 ? "border-r border-zinc-700" : ""
+                idx < models.length - 1 ? "border-r border-gray-200" : ""
               }`}
             >
               <ComparisonChatColumn

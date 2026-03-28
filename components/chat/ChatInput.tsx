@@ -34,7 +34,7 @@ export function ChatInput({
   );
 
   return (
-    <div className="border-t border-zinc-700 bg-zinc-900 p-4">
+    <div className="border-t border-gray-200 bg-white p-4">
       <form
         ref={formRef}
         onSubmit={onSubmit}
@@ -45,7 +45,7 @@ export function ChatInput({
           onChange={onChange}
           onKeyDown={handleKeyDown}
           placeholder="Ask Vocareum Agent anything..."
-          className="min-h-[44px] max-h-[200px] resize-none bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-indigo-400"
+          className="min-h-[44px] max-h-[200px] resize-none bg-gray-100 border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-[#5ba4b5]"
           rows={1}
         />
         {isLoading ? (
@@ -62,7 +62,7 @@ export function ChatInput({
           <Button
             type="submit"
             size="sm"
-            className="shrink-0 bg-indigo-400 hover:bg-indigo-500 text-zinc-950"
+            className="shrink-0 bg-[#5ba4b5] hover:bg-[#4a8fa0] text-white"
             disabled={!input.trim()}
           >
             Send

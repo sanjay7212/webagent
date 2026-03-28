@@ -44,11 +44,11 @@ export function ConversationSidebar({
   };
 
   return (
-    <div className="flex flex-col h-full bg-zinc-900 border-r border-zinc-700">
-      <div className="p-3 border-b border-zinc-700">
+    <div className="flex flex-col h-full bg-white border-r border-gray-200">
+      <div className="p-3 border-b border-gray-200">
         <Button
           onClick={onCreate}
-          className="w-full bg-indigo-400 hover:bg-indigo-500 text-zinc-950 text-sm"
+          className="w-full bg-[#5ba4b5] hover:bg-[#4a8fa0] text-white text-sm"
           size="sm"
         >
           + New Conversation
@@ -62,8 +62,8 @@ export function ConversationSidebar({
               key={conv.id}
               className={`group flex items-center gap-1 rounded-md px-2 py-2 cursor-pointer transition-colors ${
                 activeId === conv.id
-                  ? "bg-zinc-700 text-zinc-100"
-                  : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+                  ? "bg-[#5ba4b5]/10 text-[#5ba4b5] font-medium"
+                  : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"
               }`}
               onClick={() => onSelect(conv.id)}
             >
@@ -77,7 +77,7 @@ export function ConversationSidebar({
                     if (e.key === "Enter") finishRename();
                     if (e.key === "Escape") setEditingId(null);
                   }}
-                  className="flex-1 bg-zinc-800 text-zinc-100 text-sm px-1 rounded border border-zinc-600 outline-none"
+                  className="flex-1 bg-gray-100 text-gray-900 text-sm px-1 rounded border border-gray-300 outline-none"
                   autoFocus
                   onClick={(e) => e.stopPropagation()}
                 />
@@ -87,17 +87,17 @@ export function ConversationSidebar({
 
               <DropdownMenu>
                 <DropdownMenuTrigger
-                  className="opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-zinc-300 px-1"
+                  className="opacity-0 group-hover:opacity-100 text-gray-500 hover:text-gray-700 px-1"
                   onClick={(e: React.MouseEvent) => e.stopPropagation()}
                 >
                   ⋯
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                  className="bg-zinc-800 border-zinc-700"
+                  className="bg-gray-100 border-gray-200"
                   align="end"
                 >
                   <DropdownMenuItem
-                    className="text-zinc-200 focus:bg-zinc-700"
+                    className="text-gray-800 focus:bg-gray-200"
                     onClick={(e) => {
                       e.stopPropagation();
                       startRename(conv);
@@ -106,7 +106,7 @@ export function ConversationSidebar({
                     Rename
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    className="text-red-400 focus:bg-zinc-700 focus:text-red-400"
+                    className="text-red-400 focus:bg-gray-200 focus:text-red-400"
                     onClick={(e) => {
                       e.stopPropagation();
                       onDelete(conv.id);
@@ -120,7 +120,7 @@ export function ConversationSidebar({
           ))}
 
           {conversations.length === 0 && (
-            <p className="text-zinc-500 text-xs text-center py-4">
+            <p className="text-gray-500 text-xs text-center py-4">
               No conversations yet
             </p>
           )}

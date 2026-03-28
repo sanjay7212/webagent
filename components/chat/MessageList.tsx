@@ -28,9 +28,9 @@ export function MessageList({ messages, isLoading, policies, onApprove, onDeny, 
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="text-center text-zinc-500">
+        <div className="text-center text-gray-500">
           <div className="text-4xl mb-4">🎓</div>
-          <h2 className="text-xl font-semibold text-zinc-300 mb-2">
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">
             Vocareum Agent
           </h2>
           <p className="text-sm max-w-md">
@@ -57,7 +57,7 @@ export function MessageList({ messages, isLoading, policies, onApprove, onDeny, 
         ))}
         {isLoading && (
           <div className="flex justify-start mb-4">
-            <div className="bg-zinc-800 rounded-2xl rounded-bl-md px-4 py-3">
+            <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3">
               <div className="flex gap-1">
                 <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:0ms]" />
                 <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:150ms]" />

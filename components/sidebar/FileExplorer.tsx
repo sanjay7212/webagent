@@ -38,7 +38,7 @@ function FileTreeNodeComponent({
     return (
       <div>
         <button
-          className="flex items-center gap-1.5 w-full text-left px-2 py-1 hover:bg-zinc-700/50 rounded text-sm text-zinc-300"
+          className="flex items-center gap-1.5 w-full text-left px-2 py-1 hover:bg-zinc-700/50 rounded text-sm text-gray-700"
           style={{ paddingLeft: `${depth * 16 + 8}px` }}
           onClick={() => setExpanded(!expanded)}
         >
@@ -60,7 +60,7 @@ function FileTreeNodeComponent({
 
   return (
     <button
-      className="flex items-center gap-1.5 w-full text-left px-2 py-1 hover:bg-zinc-700/50 rounded text-sm text-zinc-400 hover:text-zinc-200"
+      className="flex items-center gap-1.5 w-full text-left px-2 py-1 hover:bg-zinc-700/50 rounded text-sm text-gray-500 hover:text-gray-800"
       style={{ paddingLeft: `${depth * 16 + 8}px` }}
       onClick={() => onFileClick(node.path)}
     >
@@ -89,13 +89,13 @@ export function FileExplorer({ workspaceId, onFileSelect }: FileExplorerProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-zinc-900 border-l border-zinc-700">
-      <div className="flex items-center justify-between p-3 border-b border-zinc-700">
-        <span className="text-sm font-medium text-zinc-300">Files</span>
+    <div className="flex flex-col h-full bg-white border-l border-gray-200">
+      <div className="flex items-center justify-between p-3 border-b border-gray-200">
+        <span className="text-sm font-medium text-gray-700">Files</span>
         <Button
           variant="ghost"
           size="sm"
-          className="text-zinc-400 hover:text-zinc-200 h-6 px-2"
+          className="text-gray-500 hover:text-gray-800 h-6 px-2"
           onClick={fetchFileTree}
         >
           ↻
@@ -104,7 +104,7 @@ export function FileExplorer({ workspaceId, onFileSelect }: FileExplorerProps) {
       <ScrollArea className="flex-1">
         <div className="py-1">
           {fileTree.length === 0 ? (
-            <p className="text-zinc-500 text-xs text-center py-4">
+            <p className="text-gray-500 text-xs text-center py-4">
               Workspace is empty
             </p>
           ) : (

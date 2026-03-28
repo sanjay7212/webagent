@@ -21,7 +21,7 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
 
   if (loading) {
     return (
-      <div className="h-9 w-48 bg-zinc-800 rounded-md animate-pulse" />
+      <div className="h-9 w-48 bg-gray-100 rounded-md animate-pulse" />
     );
   }
 
@@ -37,20 +37,20 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
 
   return (
     <Select value={value} onValueChange={(val) => { if (val) onChange(val); }}>
-      <SelectTrigger className="w-56 bg-zinc-800 border-zinc-700 text-zinc-200 text-sm">
+      <SelectTrigger className="w-56 bg-gray-100 border-gray-200 text-gray-800 text-sm">
         <SelectValue placeholder="Select model" />
       </SelectTrigger>
-      <SelectContent className="bg-zinc-800 border-zinc-700">
+      <SelectContent className="bg-gray-100 border-gray-200">
         {providerEntries.map(([provider, models]) => (
           <SelectGroup key={provider}>
-            <SelectLabel className="text-zinc-400 text-xs uppercase tracking-wider">
+            <SelectLabel className="text-gray-500 text-xs uppercase tracking-wider">
               {provider}
             </SelectLabel>
             {models.map((model) => (
               <SelectItem
                 key={model.id}
                 value={model.id}
-                className="text-zinc-200 focus:bg-zinc-700 focus:text-zinc-100"
+                className="text-gray-800 focus:bg-gray-200 focus:text-gray-900"
               >
                 {model.name}
               </SelectItem>

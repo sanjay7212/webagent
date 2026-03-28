@@ -99,7 +99,7 @@ export const ComparisonChatColumn = forwardRef<
   return (
     <div ref={containerRef} className="flex flex-col h-full min-h-0">
       {/* Model header */}
-      <div className="px-3 py-2 border-b border-zinc-700 bg-zinc-800/50 shrink-0">
+      <div className="px-3 py-2 border-b border-gray-200 bg-gray-50 shrink-0">
         <div className="flex items-center justify-between">
           <span
             className={`text-xs font-medium ${providerColor} border rounded px-1.5 py-0.5`}
@@ -107,12 +107,12 @@ export const ComparisonChatColumn = forwardRef<
             {modelName}
           </span>
           {isLoading && (
-            <span className="text-xs text-zinc-500 animate-pulse">
+            <span className="text-xs text-gray-500 animate-pulse">
               generating...
             </span>
           )}
           {!isLoading && tokenUsage && (
-            <span className="text-xs text-zinc-500 font-mono">
+            <span className="text-xs text-gray-500 font-mono">
               ~{tokenUsage.totalTokens.toLocaleString()} tok
             </span>
           )}
@@ -126,11 +126,11 @@ export const ComparisonChatColumn = forwardRef<
 
       {/* Token breakdown footer */}
       {!isLoading && tokenUsage && (
-        <div className="px-3 py-1.5 border-t border-zinc-700/50 bg-zinc-800/30 shrink-0">
-          <div className="flex gap-3 text-xs text-zinc-500 font-mono">
+        <div className="px-3 py-1.5 border-t border-gray-200 bg-gray-50 shrink-0">
+          <div className="flex gap-3 text-xs text-gray-500 font-mono">
             <span>in: ~{tokenUsage.promptTokens.toLocaleString()}</span>
             <span>out: ~{tokenUsage.completionTokens.toLocaleString()}</span>
-            <span className="text-zinc-400">
+            <span className="text-gray-500">
               total: ~{tokenUsage.totalTokens.toLocaleString()}
             </span>
           </div>

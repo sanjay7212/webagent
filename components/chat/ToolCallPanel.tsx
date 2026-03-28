@@ -44,16 +44,16 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
   }, [toolCalls.length]);
 
   return (
-    <div className="flex flex-col h-full bg-zinc-900 border-l border-zinc-700">
+    <div className="flex flex-col h-full bg-white border-l border-gray-200">
       {/* Header */}
-      <div className="p-3 border-b border-zinc-700 shrink-0">
+      <div className="p-3 border-b border-gray-200 shrink-0">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-zinc-300">
+          <span className="text-sm font-medium text-gray-700">
             Tool Calls
           </span>
           <Badge
             variant="outline"
-            className="text-xs bg-zinc-800 text-zinc-400 border-zinc-600"
+            className="text-xs bg-gray-100 text-gray-500 border-gray-300"
           >
             {stats.total} total
           </Badge>
@@ -73,7 +73,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
             {stats.byStatus.running > 0 && (
               <Badge
                 variant="outline"
-                className="text-xs bg-indigo-400/10 text-indigo-400 border-indigo-400/20"
+                className="text-xs bg-[#5ba4b5]/10 text-[#5ba4b5] border-[#5ba4b5]/20"
               >
                 ◉ {stats.byStatus.running}
               </Badge>
@@ -104,7 +104,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
               <Badge
                 key={name}
                 variant="outline"
-                className="text-xs bg-zinc-800 text-zinc-400 border-zinc-600"
+                className="text-xs bg-gray-100 text-gray-500 border-gray-300"
               >
                 {TOOL_META[name]?.icon || "🔧"} {name}: {count}
               </Badge>
@@ -114,8 +114,8 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
 
         {/* Active policy indicator */}
         {activePreset && (
-          <div className="mt-2 text-xs text-zinc-500">
-            Policy: <span className="text-zinc-400">{activePreset === "custom" ? "Custom" : activePreset}</span>
+          <div className="mt-2 text-xs text-gray-500">
+            Policy: <span className="text-gray-500">{activePreset === "custom" ? "Custom" : activePreset}</span>
           </div>
         )}
       </div>
@@ -125,7 +125,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
         {/* Available Tools inventory */}
         <div className="px-2 pt-2">
           <button
-            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 mb-1.5 w-full text-left"
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 mb-1.5 w-full text-left"
             onClick={() => setShowInventory((v) => !v)}
           >
             <span>{showInventory ? "▼" : "▶"}</span>
@@ -138,12 +138,12 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                 const pol = policies.find((p) => p.toolName === name);
                 const policyTag = pol?.policy === "auto_approve" ? "auto" : pol?.policy === "always_ask" ? "ask" : pol?.policy === "conditional" ? "cond" : "—";
                 return (
-                  <div key={name} className="flex items-center gap-2 px-2 py-1 rounded bg-zinc-800/60 text-xs">
+                  <div key={name} className="flex items-center gap-2 px-2 py-1 rounded bg-gray-50 text-xs">
                     <span>{getRiskIcon(risk)}</span>
                     <span>{meta.icon}</span>
-                    <span className="font-mono text-zinc-300">{name}</span>
-                    <span className="text-zinc-600 truncate min-w-0">{meta.description}</span>
-                    <span className="ml-auto text-zinc-600 shrink-0 font-mono">{policyTag}</span>
+                    <span className="font-mono text-gray-700">{name}</span>
+                    <span className="text-gray-400 truncate min-w-0">{meta.description}</span>
+                    <span className="ml-auto text-gray-400 shrink-0 font-mono">{policyTag}</span>
                   </div>
                 );
               })}
@@ -152,7 +152,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
         </div>
 
         {toolCalls.length === 0 ? (
-          <div className="px-4 pb-4 text-center text-zinc-500 text-sm">
+          <div className="px-4 pb-4 text-center text-gray-500 text-sm">
             No tool calls yet. Send a message that requires the agent to
             take action (e.g., read a file, run a command).
           </div>
@@ -169,7 +169,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                     ? "text-red-500"
                     : tc.state === "pending"
                       ? "text-yellow-500"
-                      : "text-indigo-400";
+                      : "text-[#5ba4b5]";
 
               const summary =
                 "file_path" in tc.args
@@ -187,10 +187,10 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
               return (
                 <div
                   key={tc.toolCallId}
-                  className="rounded-lg border border-zinc-700/50 bg-zinc-800/40 overflow-hidden"
+                  className="rounded-lg border border-gray-200 bg-gray-50 overflow-hidden"
                 >
                   <button
-                    className="flex items-center gap-2 px-2.5 py-1.5 w-full text-left hover:bg-zinc-700/30 transition-colors"
+                    className="flex items-center gap-2 px-2.5 py-1.5 w-full text-left hover:bg-gray-100 transition-colors"
                     onClick={() =>
                       setExpandedId(isExpanded ? null : tc.toolCallId)
                     }
@@ -199,11 +199,11 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                     <span className="text-xs shrink-0">
                       {TOOL_META[tc.toolName]?.icon || "🔧"}
                     </span>
-                    <span className="font-mono text-xs text-zinc-200 shrink-0">
+                    <span className="font-mono text-xs text-gray-800 shrink-0">
                       {tc.toolName}
                     </span>
                     {summary && (
-                      <span className="text-xs text-zinc-500 truncate min-w-0">
+                      <span className="text-xs text-gray-500 truncate min-w-0">
                         {summary}
                       </span>
                     )}
@@ -216,13 +216,13 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                             ? "⏳"
                             : "◉"}
                     </span>
-                    <span className="text-zinc-600 text-xs shrink-0">
+                    <span className="text-gray-400 text-xs shrink-0">
                       {isExpanded ? "▼" : "▶"}
                     </span>
                   </button>
 
                   {isExpanded && (
-                    <div className="px-2.5 pb-2 border-t border-zinc-700/50">
+                    <div className="px-2.5 pb-2 border-t border-gray-200">
                       {/* Audit: risk + policy */}
                       <div className="flex items-center gap-2 mt-1.5 mb-1.5">
                         <Badge
@@ -232,20 +232,20 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                           {risk} risk
                         </Badge>
                         {policyLabel && (
-                          <span className="text-xs text-zinc-500">{policyLabel}</span>
+                          <span className="text-xs text-gray-500">{policyLabel}</span>
                         )}
                       </div>
 
                       <div className="mt-1.5">
-                        <div className="text-xs text-zinc-500 mb-0.5">Input</div>
-                        <pre className="text-xs bg-zinc-900 p-1.5 rounded overflow-auto max-h-32 text-zinc-300">
+                        <div className="text-xs text-gray-500 mb-0.5">Input</div>
+                        <pre className="text-xs bg-white p-1.5 rounded overflow-auto max-h-32 text-gray-700">
                           {JSON.stringify(tc.args, null, 2)}
                         </pre>
                       </div>
                       {tc.result !== undefined && (
                         <div className="mt-1.5">
-                          <div className="text-xs text-zinc-500 mb-0.5">Output</div>
-                          <pre className="text-xs bg-zinc-900 p-1.5 rounded overflow-auto max-h-40 whitespace-pre-wrap text-zinc-300">
+                          <div className="text-xs text-gray-500 mb-0.5">Output</div>
+                          <pre className="text-xs bg-white p-1.5 rounded overflow-auto max-h-40 whitespace-pre-wrap text-gray-700">
                             {typeof tc.result === "string"
                               ? tc.result
                               : JSON.stringify(tc.result, null, 2)}

@@ -14,17 +14,17 @@ export function CodeViewer({ filePath, content, onClose }: CodeViewerProps) {
   const extension = filePath.split(".").pop() || "";
 
   return (
-    <div className="flex flex-col h-full bg-zinc-900">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-700 bg-zinc-800">
+    <div className="flex flex-col h-full bg-white">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-gray-100">
         <div className="flex items-center gap-2">
-          <span className="text-xs text-zinc-400">📄</span>
-          <span className="text-sm text-zinc-200 font-mono">{filePath}</span>
+          <span className="text-xs text-gray-500">📄</span>
+          <span className="text-sm text-gray-800 font-mono">{filePath}</span>
         </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={onClose}
-          className="text-zinc-400 hover:text-zinc-200 h-6 px-2"
+          className="text-gray-500 hover:text-gray-800 h-6 px-2"
         >
           ✕
         </Button>
@@ -34,11 +34,11 @@ export function CodeViewer({ filePath, content, onClose }: CodeViewerProps) {
           <table className="w-full">
             <tbody>
               {lines.map((line, i) => (
-                <tr key={i} className="hover:bg-zinc-800/50">
-                  <td className="text-zinc-600 text-right pr-4 select-none w-12 align-top">
+                <tr key={i} className="hover:bg-gray-50">
+                  <td className="text-gray-400 text-right pr-4 select-none w-12 align-top">
                     {i + 1}
                   </td>
-                  <td className="text-zinc-200 whitespace-pre-wrap break-all">
+                  <td className="text-gray-800 whitespace-pre-wrap break-all">
                     {line || " "}
                   </td>
                 </tr>

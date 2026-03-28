@@ -22,18 +22,18 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900 border-zinc-700 text-zinc-100 max-w-2xl max-h-[80vh] flex flex-col">
+      <DialogContent className="bg-white border-gray-200 text-gray-900 max-w-2xl max-h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-zinc-100">Settings</DialogTitle>
+          <DialogTitle className="text-gray-900">Settings</DialogTitle>
         </DialogHeader>
 
         {/* Tab bar */}
-        <div className="flex border-b border-zinc-700">
+        <div className="flex border-b border-gray-200">
           <button
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
               tab === "providers"
-                ? "border-indigo-400 text-indigo-400"
-                : "border-transparent text-zinc-500 hover:text-zinc-300"
+                ? "border-[#5ba4b5] text-[#5ba4b5]"
+                : "border-transparent text-gray-500 hover:text-gray-700"
             }`}
             onClick={() => setTab("providers")}
           >
@@ -42,8 +42,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           <button
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
               tab === "policies"
-                ? "border-indigo-400 text-indigo-400"
-                : "border-transparent text-zinc-500 hover:text-zinc-300"
+                ? "border-[#5ba4b5] text-[#5ba4b5]"
+                : "border-transparent text-gray-500 hover:text-gray-700"
             }`}
             onClick={() => setTab("policies")}
           >
@@ -56,7 +56,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           {tab === "providers" && (
             <div className="space-y-6 py-2">
               <div>
-                <h3 className="text-sm font-medium text-zinc-300 mb-3">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">
                   API Provider Status
                 </h3>
                 <div className="space-y-2">
@@ -67,9 +67,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   ].map(({ name, key }) => (
                     <div
                       key={key}
-                      className="flex items-center justify-between py-2 px-3 bg-zinc-800 rounded"
+                      className="flex items-center justify-between py-2 px-3 bg-gray-100 rounded"
                     >
-                      <span className="text-sm text-zinc-200">{name}</span>
+                      <span className="text-sm text-gray-800">{name}</span>
                       {groupedModels[key] ? (
                         <Badge className="bg-green-500/10 text-green-400 border-green-500/20">
                           Connected ({groupedModels[key].length} models)
@@ -77,7 +77,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                       ) : (
                         <Badge
                           variant="outline"
-                          className="text-zinc-500 border-zinc-600"
+                          className="text-gray-500 border-gray-300"
                         >
                           Not configured
                         </Badge>
@@ -88,8 +88,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-zinc-300 mb-2">About</h3>
-                <p className="text-xs text-zinc-500">
+                <h3 className="text-sm font-medium text-gray-700 mb-2">About</h3>
+                <p className="text-xs text-gray-500">
                   Vocareum Agent is a general-purpose AI assistant with multi-model support.
                   Configure API keys in your .env.local file.
                 </p>
