@@ -6,7 +6,6 @@ import { DefaultChatTransport } from "ai";
 import { ChatPanel } from "./ChatPanel";
 import { ToolCallPanel } from "./ToolCallPanel";
 import { AgentPanel } from "./AgentPanel";
-import { FileExplorer } from "@/components/sidebar/FileExplorer";
 import { useToolPolicies } from "@/lib/hooks/useToolPolicies";
 
 interface ActiveChatViewProps {
@@ -14,9 +13,7 @@ interface ActiveChatViewProps {
   model: string;
   showToolCalls: boolean;
   showAgentPanel: boolean;
-  showFiles: boolean;
   workspaceId: string;
-  onFileSelect: (path: string, content: string) => void;
 }
 
 export function ActiveChatView({
@@ -24,9 +21,7 @@ export function ActiveChatView({
   model,
   showToolCalls,
   showAgentPanel,
-  showFiles,
   workspaceId,
-  onFileSelect,
 }: ActiveChatViewProps) {
   const [input, setInput] = useState("");
   const { policies, approveAndRemember } = useToolPolicies();
@@ -137,12 +132,7 @@ export function ActiveChatView({
         </div>
       )}
 
-      {/* File Explorer (right sidebar) */}
-      {showFiles && (
-        <div className="w-64 shrink-0">
-          <FileExplorer workspaceId={workspaceId} onFileSelect={onFileSelect} />
-        </div>
-      )}
+
     </div>
   );
 }

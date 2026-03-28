@@ -8,7 +8,6 @@ import { ActiveChatView } from "@/components/chat/ActiveChatView";
 import { ModelSelector } from "@/components/chat/ModelSelector";
 import { ModelComparisonSelector } from "@/components/chat/ModelComparisonSelector";
 import { ComparisonView } from "@/components/chat/ComparisonView";
-import { CodeViewer } from "@/components/editor/CodeViewer";
 import { SettingsDialog } from "@/components/layout/SettingsDialog";
 import { Button } from "@/components/ui/button";
 
@@ -26,16 +25,10 @@ export default function Home() {
   const [selectedModel, setSelectedModel] = useState(
     "anthropic:claude-opus-4-6"
   );
-  const [showFiles, setShowFiles] = useState(false);
   const [showToolCalls, setShowToolCalls] = useState(false);
   const [showAgentPanel, setShowAgentPanel] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [viewingFile, setViewingFile] = useState<{
-    path: string;
-    content: string;
-  } | null>(null);
-
   // Comparison mode state
   const [comparisonMode, setComparisonMode] = useState(false);
   const [comparisonModels, setComparisonModels] = useState<string[]>([]);
@@ -51,7 +44,6 @@ export default function Home() {
 
   const handleSelectConversation = useCallback((id: string) => {
     setActiveConversationId(id);
-    setViewingFile(null);
   }, []);
 
   const handleDeleteConversation = useCallback(
@@ -64,16 +56,11 @@ export default function Home() {
     [deleteConversation, activeConversationId]
   );
 
-  const handleFileSelect = useCallback((path: string, content: string) => {
-    setViewingFile({ path, content });
-  }, []);
-
   const handleToggleComparison = useCallback(() => {
     setComparisonMode((prev) => !prev);
     if (!comparisonMode) {
       // Entering comparison mode — clear single chat state
-      setViewingFile(null);
-    }
+      }
   }, [comparisonMode]);
 
   return (
@@ -172,17 +159,6 @@ export default function Home() {
           <Button
             variant="ghost"
             size="sm"
-            className={`hover:bg-white/10 ${
-              showFiles ? "bg-white/20 text-white" : "text-white/70 hover:text-white"
-            }`}
-            onClick={() => setShowFiles(!showFiles)}
-          >
-            📁 Files
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="sm"
             className="text-white/70 hover:text-white hover:bg-white/10"
             onClick={() => setShowSettings(true)}
           >
@@ -217,13 +193,6 @@ export default function Home() {
                 </p>
               </div>
             </div>
-          ) : viewingFile ? (
-            /* Code Viewer */
-            <CodeViewer
-              filePath={viewingFile.path}
-              content={viewingFile.content}
-              onClose={() => setViewingFile(null)}
-            />
           ) : activeConversationId && activeConversation ? (
             /* Active Chat with Tool Panel + File Explorer */
             <ActiveChatView
@@ -231,9 +200,7 @@ export default function Home() {
               model={selectedModel}
               showToolCalls={showToolCalls}
               showAgentPanel={showAgentPanel}
-              showFiles={showFiles}
               workspaceId={activeConversation.workspaceId}
-              onFileSelect={handleFileSelect}
             />
           ) : (
             /* Welcome screen */
