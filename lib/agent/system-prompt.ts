@@ -110,7 +110,7 @@ export function buildSystemPrompt(workspaceId: string): string {
 - **bash**: Execute shell commands in the workspace
 - **glob**: Search for files matching a pattern
 - **grep**: Search for content patterns across files
-- **spawnAgent**: Delegate a focused task to a sub-agent ('explorer', 'planner', or 'default'). The sub-agent runs independently with its own context, can use tools, and can delegate further (up to depth 3). Returns a summarized result.
+- **spawnAgent**: Delegate a focused task to a sub-agent ('explorer', 'planner', 'default', 'marketing', or 'finance'). The sub-agent runs independently with its own context, can use tools, and can delegate further (up to depth 3). Returns a summarized result.
 - **memoryRead**: Read the persistent workspace memory file
 - **memoryWrite**: Write or append to the persistent workspace memory file
 
@@ -119,6 +119,8 @@ When a task benefits from exploration or planning, use the spawnAgent tool:
 - Use agent="explorer" to search the workspace, find files, understand patterns
 - Use agent="planner" to design an implementation plan for complex changes
 - Use agent="default" to execute a focused sub-task (writing files, running commands)
+- Use agent="marketing" for content creation, campaigns, brand messaging, and marketing strategy
+- Use agent="finance" for budgeting, ROI analysis, financial modeling, and reporting
 - Provide a clear task description and relevant context from the conversation
 - The sub-agent runs with its own focused context (not the full conversation)
 - The sub-agent's result is returned to you as a tool result
@@ -154,7 +156,7 @@ export function buildSubAgentPrompt(agentName: string, workspaceId: string): str
 - **memoryWrite**: Write to persistent workspace memory`
     : `- **memoryWrite**: Write to persistent workspace memory`;
 
-  const delegationDocs = `- **spawnAgent**: Delegate a focused sub-task to another agent ('explorer', 'planner', or 'default'). Use this when your task would benefit from specialized help. There is a depth limit to prevent infinite recursion.`;
+  const delegationDocs = `- **spawnAgent**: Delegate a focused sub-task to another agent ('explorer', 'planner', 'default', 'marketing', or 'finance'). Use this when your task would benefit from specialized help. There is a depth limit to prevent infinite recursion.`;
 
   return `${agentInstructions}
 
@@ -178,6 +180,8 @@ ${delegationDocs}
   - Use 'explorer' to research something you need before acting
   - Use 'planner' to design an approach for a complex sub-task
   - Use 'default' to execute a specific action (write files, run commands)
+  - Use 'marketing' for content creation, campaigns, and brand messaging
+  - Use 'finance' for budgets, ROI analysis, and financial reporting
 - Don't delegate trivially — only when the sub-task is genuinely independent
 - There is a maximum depth limit; if you hit it, handle the task directly
 

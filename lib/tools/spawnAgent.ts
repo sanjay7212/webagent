@@ -59,6 +59,12 @@ function createSubAgentTools(
       bash: bashTool(workspaceId),
       memoryWrite: memoryWriteTool(workspaceId),
     };
+  } else if (agentType === "marketing" || agentType === "finance") {
+    // Specialist agents: full tool access (they create documents, reports, etc.)
+    tools = {
+      ...readTools,
+      ...writeTools,
+    };
   } else {
     // Default/executor: full tool access
     tools = {
@@ -87,12 +93,12 @@ function spawnAgentToolWithDepth(
     description:
       depth >= MAX_DEPTH
         ? "Cannot spawn sub-agents: maximum delegation depth reached."
-        : `Spawn a sub-agent to perform a focused task. Available agents: 'explorer' (search, research, understand), 'planner' (design approaches, break down tasks), 'default' (execute tasks, write files, run commands). The sub-agent runs independently with its own context and returns a summarized result. Current depth: ${depth}/${MAX_DEPTH}.`,
+        : `Spawn a sub-agent to perform a focused task. Available agents: 'explorer' (search, research, understand), 'planner' (design approaches, break down tasks), 'default' (execute tasks, write files, run commands), 'marketing' (content creation, campaigns, brand messaging), 'finance' (budgeting, ROI analysis, financial reporting). The sub-agent runs independently with its own context and returns a summarized result. Current depth: ${depth}/${MAX_DEPTH}.`,
     inputSchema: z.object({
       agent: z
-        .enum(["explorer", "planner", "default"])
+        .enum(["explorer", "planner", "default", "marketing", "finance"])
         .describe(
-          "Which agent to spawn: 'explorer' for research/search, 'planner' for strategy/design, 'default' for execution"
+          "Which agent to spawn: 'explorer' for research/search, 'planner' for strategy/design, 'default' for execution, 'marketing' for content/campaigns, 'finance' for budgets/analysis"
         ),
       task: z
         .string()

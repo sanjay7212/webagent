@@ -84,11 +84,11 @@ export function LabSidebar({
           <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
               className="h-full bg-[#5ba4b5] rounded-full transition-all duration-300"
-              style={{ width: `${(completedCount / 10) * 100}%` }}
+              style={{ width: `${(completedCount / LABS.length) * 100}%` }}
             />
           </div>
           <span className="text-xs text-gray-500 whitespace-nowrap">
-            {completedCount}/10
+            {completedCount}/{LABS.length}
           </span>
         </div>
       </div>

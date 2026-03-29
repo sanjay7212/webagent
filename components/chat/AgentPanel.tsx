@@ -13,6 +13,8 @@ const agentIcons: Record<string, string> = {
   default: "⚡",
   explorer: "🔍",
   planner: "📋",
+  marketing: "📢",
+  finance: "💰",
   unknown: "🤖",
 };
 
@@ -21,6 +23,8 @@ const agentColors: Record<string, string> = {
   default: "text-purple-600 border-purple-600/30 bg-purple-50",
   explorer: "text-cyan-600 border-cyan-600/30 bg-cyan-50",
   planner: "text-amber-600 border-amber-600/30 bg-amber-50",
+  marketing: "text-rose-600 border-rose-600/30 bg-rose-50",
+  finance: "text-emerald-600 border-emerald-600/30 bg-emerald-50",
 };
 
 function StatusDot({ status }: { status: string }) {
@@ -159,7 +163,7 @@ const AVAILABLE_AGENTS = [
     description: "General-purpose agent for executing tasks, writing files, and running commands",
     tools: ["fileRead", "fileWrite", "fileEdit", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
     canDelegate: true,
-    delegateTo: ["explorer", "planner", "default"],
+    delegateTo: ["explorer", "planner", "default", "marketing", "finance"],
   },
   {
     name: "default",
@@ -168,7 +172,7 @@ const AVAILABLE_AGENTS = [
     description: "Focused execution agent — writes files, runs commands, handles independent sub-tasks",
     tools: ["fileRead", "fileWrite", "fileEdit", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
     canDelegate: true,
-    delegateTo: ["explorer", "planner", "default"],
+    delegateTo: ["explorer", "planner", "default", "marketing", "finance"],
   },
   {
     name: "explorer",
@@ -177,7 +181,7 @@ const AVAILABLE_AGENTS = [
     description: "Research and discovery — finds files, searches content, gathers information",
     tools: ["fileRead", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
     canDelegate: true,
-    delegateTo: ["explorer", "planner", "default"],
+    delegateTo: ["explorer", "planner", "default", "marketing", "finance"],
   },
   {
     name: "planner",
@@ -186,7 +190,25 @@ const AVAILABLE_AGENTS = [
     description: "Planning and strategy — designs approaches for complex multi-step tasks",
     tools: ["fileRead", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
     canDelegate: true,
-    delegateTo: ["explorer", "planner", "default"],
+    delegateTo: ["explorer", "planner", "default", "marketing", "finance"],
+  },
+  {
+    name: "marketing",
+    icon: "📢",
+    label: "Marketing Agent",
+    description: "Content creation, campaigns, audience analysis, and brand messaging",
+    tools: ["fileRead", "fileWrite", "fileEdit", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
+    canDelegate: true,
+    delegateTo: ["explorer", "finance", "default"],
+  },
+  {
+    name: "finance",
+    icon: "💰",
+    label: "Finance Agent",
+    description: "Budgeting, financial analysis, forecasting, ROI calculations, and reporting",
+    tools: ["fileRead", "fileWrite", "fileEdit", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
+    canDelegate: true,
+    delegateTo: ["explorer", "marketing", "default"],
   },
 ];
 

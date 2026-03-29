@@ -240,4 +240,71 @@ export const LABS: Lab[] = [
       ],
     },
   },
+  {
+    id: "lab-11",
+    number: 11,
+    title: "Marketing Agent Delegation",
+    description: "See how the main agent delegates marketing tasks to the specialized marketing sub-agent, and how that sub-agent can further delegate to other specialists.",
+    objectives: [
+      "Understand how specialist sub-agents are triggered by domain-specific requests",
+      "Observe the marketing agent creating content and campaign materials",
+      "See cross-agent delegation (marketing agent delegating to finance for budget)",
+      "Learn to monitor multi-agent workflows in the Agent Execution panel",
+    ],
+    steps: [
+      { title: "Open the Agents panel", instruction: "Click the \"🤖 Agents\" button in the header. Notice the Available Agents list now includes the Marketing Agent (📢) and Finance Agent (💰) alongside the original agents. Each shows which other agents it can delegate to.", hint: "The marketing agent can delegate to explorer, finance, and default — enabling it to research existing materials, get budget estimates, and create files." },
+      { title: "Request a campaign brief", instruction: "Send this prompt: \"Create a complete email marketing campaign brief for launching a new premium credit card targeting millennials. Include target audience, key messages, subject line options, and a 3-email sequence.\" Watch the Agents panel — the main agent should delegate this to the marketing sub-agent.", hint: "Look at the Agent Executions section. You should see the main agent spawn a 'marketing' sub-agent. The sub-agent gets its own context and tools." },
+      { title: "Request marketing with financial analysis", instruction: "Now send: \"Plan a social media advertising campaign for Q4 with a $50,000 budget. Break down the budget across platforms (Instagram, LinkedIn, Google Ads), estimate CPM and CPA for each, and project the expected ROI.\" This should trigger delegation to BOTH marketing and finance agents.", hint: "Watch the Agent panel carefully — you may see the main agent delegate to marketing, which then delegates to finance for the budget/ROI analysis. This is multi-level delegation in action." },
+      { title: "Examine the delegation chain", instruction: "In the Agents panel, expand each agent card to see: which tools each agent used, how many steps it took, and the token cost. Notice how the marketing agent focused on creative strategy while the finance agent handled the numbers.", hint: "Each sub-agent runs in isolation with its own context. The parent agent receives back a summarized result, not the full conversation." },
+      { title: "Try a cross-functional request", instruction: "Send: \"Our competitor just dropped their prices by 20%. Draft an urgent response — I need a competitive analysis, a revised pricing recommendation, and customer-facing messaging within the hour.\" This should trigger multiple specialist agents working together. Review the full agent tree when done, then take the quiz." },
+    ],
+    suggestedPrompts: [
+      "Create a complete email marketing campaign brief for launching a new premium credit card targeting millennials. Include target audience, key messages, subject line options, and a 3-email sequence.",
+      "Plan a social media advertising campaign for Q4 with a $50,000 budget. Break down the budget across platforms (Instagram, LinkedIn, Google Ads), estimate CPM and CPA for each, and project the expected ROI.",
+      "Our competitor just dropped their prices by 20%. Draft an urgent response — I need a competitive analysis, a revised pricing recommendation, and customer-facing messaging within the hour.",
+    ],
+    quiz: {
+      passingScore: 3,
+      questions: [
+        { id: "lab-11-q1", question: "Why does the system use a specialized marketing agent instead of handling everything with the default agent?", options: ["The default agent cannot write text at all", "Specialist agents have domain-specific instructions, structured output formats, and focused expertise that produces higher-quality results", "Marketing tasks are too simple for the default agent", "It's purely cosmetic — the output would be identical"], correctIndex: 1, explanation: "Specialist agents carry domain-specific system prompts with expertise, best practices, and structured approaches. The marketing agent knows to include CTAs, consider audience segments, and suggest A/B test variations — things a generic agent might miss." },
+        { id: "lab-11-q2", question: "What happens when the marketing agent needs financial projections for a campaign?", options: ["It makes up the numbers", "It tells the user it cannot help with finances", "It delegates to the finance sub-agent, which specializes in budgets and ROI analysis", "It crashes because marketing agents cannot do math"], correctIndex: 2, explanation: "Cross-agent delegation allows each specialist to handle what it does best. The marketing agent focuses on creative strategy and delegates financial analysis to the finance agent, which has specific expertise in budgeting and ROI calculations." },
+        { id: "lab-11-q3", question: "In the Agent Execution panel, what does a delegation chain of main → marketing → finance show?", options: ["An error — agents should never delegate to other agents", "Multi-level orchestration where each agent handles its specialty, up to the depth limit", "The system is stuck in an infinite loop", "Three separate user conversations happening simultaneously"], correctIndex: 1, explanation: "Multi-level delegation is a key feature of agentic systems. The main agent identifies the domain (marketing), marketing identifies a sub-need (financial analysis), and finance handles the numbers. Each runs with its own focused context." },
+        { id: "lab-11-q4", question: "As an operator, what should you monitor when specialist agents are working?", options: ["Only the final text output", "The delegation chain, tools used by each agent, token costs, and whether the right specialist was chosen", "Nothing — specialist agents always produce perfect results", "Only the total time elapsed"], correctIndex: 1, explanation: "Effective agent operation requires monitoring the full delegation chain: was the right specialist chosen? Did it use appropriate tools? Was the token cost reasonable? Did it delegate further when needed? These insights help you optimize agent configurations over time." },
+      ],
+    },
+  },
+  {
+    id: "lab-12",
+    number: 12,
+    title: "Finance Agent Delegation",
+    description: "Explore how the finance sub-agent handles budgeting, ROI analysis, and financial reporting, and how it collaborates with other agents.",
+    objectives: [
+      "Observe the finance agent creating structured financial analyses with calculations",
+      "See how the finance agent delegates to explorer for data gathering",
+      "Understand cross-agent collaboration between finance and marketing",
+      "Learn to evaluate whether financial outputs are accurate and well-structured",
+    ],
+    steps: [
+      { title: "Request a budget analysis", instruction: "Send: \"Create a detailed annual budget for our AI operations. We have 50 users, each using about 15 agent tasks per day. Compare costs across Claude Opus 4.6, GPT-5.2, and Gemini 2.5 Pro. Include a monthly breakdown and total annual projection.\" Watch the Agents panel for the finance agent being spawned.", hint: "The finance agent should show its work — explicit calculations, assumptions stated, and structured tables. This is part of its system prompt: 'Always show your work.'" },
+      { title: "Request an ROI analysis", instruction: "Send: \"Calculate the ROI of implementing AI agents for our customer support team. Currently we have 10 support agents handling 200 tickets/day at an average salary of $55,000/year. Estimate how AI agents could handle Tier 1 tickets and project the cost savings over 12 months.\" Watch how the finance agent structures the analysis.", hint: "A good finance agent output will include: current state costs, projected AI costs, net savings, ROI percentage, payback period, and stated assumptions." },
+      { title: "Trigger finance-marketing collaboration", instruction: "Send: \"We're launching a new product next quarter. I need a launch budget that covers both the marketing spend (ads, content creation, events) and the operational costs (AI agent usage for customer onboarding). Give me a combined budget with ROI projections.\" This should trigger both finance and marketing agents.", hint: "Watch the delegation — the main agent might spawn finance first (for the budget framework) which then delegates to marketing (for campaign cost estimates), or vice versa. The Agent panel shows the full orchestration." },
+      { title: "Test financial accuracy", instruction: "Send: \"If we spend $10,000/month on AI agents and they handle 5,000 customer interactions that would otherwise cost $3 per interaction with human agents, what is our monthly and annual ROI? Show the detailed calculation.\" Verify the math in the response — does it correctly calculate: savings = 5,000 × $3 = $15,000/month, net benefit = $15,000 - $10,000 = $5,000/month, ROI = ($5,000/$10,000) × 100 = 50%?", hint: "Always verify the agent's math. Finance agents can make calculation errors. An operator's job is to spot-check critical numbers before sharing with stakeholders." },
+      { title: "Review agent specialization value", instruction: "Compare the structured financial outputs from this lab with the general responses from Lab 1. Notice how the finance agent produces tables, shows calculations, states assumptions, and flags risks — all because of its specialized system prompt. Take the quiz to complete this lab." },
+    ],
+    suggestedPrompts: [
+      "Create a detailed annual budget for our AI operations. We have 50 users, each using about 15 agent tasks per day. Compare costs across Claude Opus 4.6, GPT-5.2, and Gemini 2.5 Pro.",
+      "Calculate the ROI of implementing AI agents for our customer support team. Currently we have 10 support agents handling 200 tickets/day at an average salary of $55,000/year.",
+      "We're launching a new product next quarter. I need a launch budget that covers both the marketing spend and the operational costs. Give me a combined budget with ROI projections.",
+      "If we spend $10,000/month on AI agents and they handle 5,000 customer interactions that would otherwise cost $3 per interaction with human agents, what is our monthly and annual ROI?",
+    ],
+    quiz: {
+      passingScore: 3,
+      questions: [
+        { id: "lab-12-q1", question: "What makes the finance agent's output different from asking the default agent the same question?", options: ["The finance agent always gives shorter answers", "The finance agent produces structured analyses with explicit calculations, stated assumptions, and risk flags", "There is no difference — all agents produce identical outputs", "The finance agent only works with spreadsheet files"], correctIndex: 1, explanation: "The finance agent's system prompt instructs it to always show calculations, state assumptions, use standard financial formats, flag risks, and provide actionable insights — producing much more professional and auditable financial outputs." },
+        { id: "lab-12-q2", question: "Why should an operator verify the math in a finance agent's output?", options: ["AI agents never make calculation errors", "The finance agent intentionally introduces errors for training", "AI models can make arithmetic mistakes, and financial errors have real business consequences", "Verification is only needed for amounts over $1 million"], correctIndex: 2, explanation: "AI models are language models, not calculators. They can make arithmetic errors, especially with complex multi-step calculations. Since financial outputs directly impact business decisions, operators must always spot-check critical numbers." },
+        { id: "lab-12-q3", question: "In a product launch budget request, why might the finance agent delegate to the marketing agent?", options: ["The finance agent cannot create any documents", "The finance agent needs marketing cost estimates and campaign projections to build an accurate budget", "Marketing agents are always faster than finance agents", "Delegation is random and has no strategic purpose"], correctIndex: 1, explanation: "Cross-agent delegation is strategic: the finance agent knows budgets need accurate cost inputs. For marketing spend estimates, the marketing specialist has better domain knowledge about ad rates, content costs, and campaign structures." },
+        { id: "lab-12-q4", question: "As an operator evaluating a finance agent's ROI analysis, which of these is a red flag?", options: ["The analysis includes a table with monthly projections", "The analysis states its assumptions explicitly", "The analysis presents a single optimistic scenario with no risk factors or sensitivity analysis", "The analysis shows step-by-step calculations"], correctIndex: 2, explanation: "A single optimistic scenario without risk factors is a major red flag. Good financial analysis includes best/worst/expected scenarios, sensitivity analysis, and explicitly stated risks. An operator should flag overly optimistic outputs for revision." },
+      ],
+    },
+  },
 ];
