@@ -132,12 +132,17 @@ function spawnAgentToolWithDepth(
           depth
         );
 
+        // Timeout sub-agent calls at 90 seconds to prevent hanging
+        const abortController = new AbortController();
+        const timeout = setTimeout(() => abortController.abort(), 90000);
+
         const result = streamText({
           model,
           system: systemPrompt,
           messages: [{ role: "user" as const, content: userContent }],
           tools: subTools,
-          stopWhen: stepCountIs(15),
+          stopWhen: stepCountIs(8),
+          abortSignal: abortController.signal,
         });
 
         // Consume the full stream
@@ -145,6 +150,8 @@ function spawnAgentToolWithDepth(
         for await (const chunk of result.textStream) {
           fullText += chunk;
         }
+
+        clearTimeout(timeout);
 
         // Collect execution metadata
         let agentMeta: Record<string, unknown> = {};
@@ -214,6 +221,9 @@ function spawnAgentToolWithDepth(
         );
       } catch (err: unknown) {
         const error = err as { message?: string };
+        if (error.message?.includes("abort")) {
+          return `Sub-agent timed out after 90 seconds. The ${agent} agent was taking too long. Try breaking the task into smaller pieces or using a faster model.`;
+        }
         return `Sub-agent error: ${error.message || "Unknown error"}`;
       }
     },

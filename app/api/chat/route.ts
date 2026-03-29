@@ -14,7 +14,8 @@ import { eq } from "drizzle-orm";
 import { buildSystemPrompt } from "@/lib/agent/system-prompt";
 import { getDefaultModel } from "@/lib/providers/models";
 
-export const maxDuration = 120;
+// Allow up to 5 minutes for complex multi-agent workflows
+export const maxDuration = 300;
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -31,6 +32,10 @@ export async function POST(req: Request) {
 
   if (!conv) {
     return new Response("Conversation not found", { status: 404 });
+  }
+
+  if (!clientMessages || !Array.isArray(clientMessages)) {
+    return new Response("Invalid messages format", { status: 400 });
   }
 
   const resolvedModel = modelId || conv.model || getDefaultModel();
