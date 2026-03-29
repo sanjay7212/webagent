@@ -10,6 +10,7 @@ import type { UIMessage } from "ai";
 
 const agentIcons: Record<string, string> = {
   main: "🎯",
+  default: "⚡",
   explorer: "🔍",
   planner: "📋",
   unknown: "🤖",
@@ -17,6 +18,7 @@ const agentIcons: Record<string, string> = {
 
 const agentColors: Record<string, string> = {
   main: "text-[#5ba4b5] border-[#5ba4b5]/30 bg-[#5ba4b5]/10",
+  default: "text-purple-600 border-purple-600/30 bg-purple-50",
   explorer: "text-cyan-600 border-cyan-600/30 bg-cyan-50",
   planner: "text-amber-600 border-amber-600/30 bg-amber-50",
 };
@@ -156,20 +158,35 @@ const AVAILABLE_AGENTS = [
     label: "Default Agent",
     description: "General-purpose agent for executing tasks, writing files, and running commands",
     tools: ["fileRead", "fileWrite", "fileEdit", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
+    canDelegate: true,
+    delegateTo: ["explorer", "planner", "default"],
+  },
+  {
+    name: "default",
+    icon: "⚡",
+    label: "Executor Sub-Agent",
+    description: "Focused execution agent — writes files, runs commands, handles independent sub-tasks",
+    tools: ["fileRead", "fileWrite", "fileEdit", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
+    canDelegate: true,
+    delegateTo: ["explorer", "planner", "default"],
   },
   {
     name: "explorer",
     icon: "🔍",
     label: "Explorer Agent",
     description: "Research and discovery — finds files, searches content, gathers information",
-    tools: ["fileRead", "glob", "grep", "memoryRead"],
+    tools: ["fileRead", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
+    canDelegate: true,
+    delegateTo: ["explorer", "planner", "default"],
   },
   {
     name: "planner",
     icon: "📋",
     label: "Planner Agent",
     description: "Planning and strategy — designs approaches for complex multi-step tasks",
-    tools: ["fileRead", "glob", "grep", "memoryRead"],
+    tools: ["fileRead", "bash", "glob", "grep", "memoryRead", "memoryWrite", "spawnAgent"],
+    canDelegate: true,
+    delegateTo: ["explorer", "planner", "default"],
   },
 ];
 
@@ -243,6 +260,13 @@ export function AgentPanel({ messages }: AgentPanelProps) {
                       <span key={t} className="text-xs text-gray-600 font-mono bg-gray-100 px-1.5 py-0.5 rounded">{t}</span>
                     ))}
                   </div>
+                  {agent.canDelegate && (
+                    <div className="mt-1 ml-6 text-xs text-gray-500">
+                      Can delegate to: {agent.delegateTo.map((d) => (
+                        <span key={d} className="inline-block font-mono bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded mr-1">{d}</span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -110,14 +110,15 @@ export function buildSystemPrompt(workspaceId: string): string {
 - **bash**: Execute shell commands in the workspace
 - **glob**: Search for files matching a pattern
 - **grep**: Search for content patterns across files
-- **spawnAgent**: Delegate a focused task to a sub-agent (explorer or planner). The sub-agent runs independently with its own context and returns a summarized result.
+- **spawnAgent**: Delegate a focused task to a sub-agent ('explorer', 'planner', or 'default'). The sub-agent runs independently with its own context, can use tools, and can delegate further (up to depth 3). Returns a summarized result.
 - **memoryRead**: Read the persistent workspace memory file
 - **memoryWrite**: Write or append to the persistent workspace memory file
 
 ## Sub-Agent Usage
 When a task benefits from exploration or planning, use the spawnAgent tool:
-- Use agent="explorer" to search the codebase, find files, understand patterns
+- Use agent="explorer" to search the workspace, find files, understand patterns
 - Use agent="planner" to design an implementation plan for complex changes
+- Use agent="default" to execute a focused sub-task (writing files, running commands)
 - Provide a clear task description and relevant context from the conversation
 - The sub-agent runs with its own focused context (not the full conversation)
 - The sub-agent's result is returned to you as a tool result
@@ -145,6 +146,16 @@ export function buildSubAgentPrompt(agentName: string, workspaceId: string): str
     agentInstructions = `You are the ${agentName} agent.`;
   }
 
+  // Determine tool descriptions based on agent type
+  const isExecutor = agentName === "default";
+  const writeToolDocs = isExecutor
+    ? `- **fileWrite**: Create or overwrite files
+- **fileEdit**: Replace text in existing files
+- **memoryWrite**: Write to persistent workspace memory`
+    : `- **memoryWrite**: Write to persistent workspace memory`;
+
+  const delegationDocs = `- **spawnAgent**: Delegate a focused sub-task to another agent ('explorer', 'planner', or 'default'). Use this when your task would benefit from specialized help. There is a depth limit to prevent infinite recursion.`;
+
   return `${agentInstructions}
 
 ## Environment
@@ -155,16 +166,24 @@ export function buildSubAgentPrompt(agentName: string, workspaceId: string): str
 
 ## Available Tools
 - **fileRead**: Read file contents
-- **bash**: Execute shell commands (for read-only operations like ls, cat, find, wc)
+- **bash**: Execute shell commands${isExecutor ? "" : " (prefer read-only operations like ls, cat, find, wc)"}
 - **glob**: Search for files by pattern
 - **grep**: Search file contents
 - **memoryRead**: Read persistent workspace memory
-- **memoryWrite**: Write to persistent workspace memory
+${writeToolDocs}
+${delegationDocs}
+
+## Delegation Guidelines
+- You CAN delegate to other sub-agents using spawnAgent when it makes sense:
+  - Use 'explorer' to research something you need before acting
+  - Use 'planner' to design an approach for a complex sub-task
+  - Use 'default' to execute a specific action (write files, run commands)
+- Don't delegate trivially — only when the sub-task is genuinely independent
+- There is a maximum depth limit; if you hit it, handle the task directly
 
 ## Instructions
 - Focus exclusively on the task given to you.
 - Be thorough but concise in your final response.
 - Write important findings to memory using memoryWrite so they persist.
-- Do NOT ask clarifying questions -- work with what you have.
-- Do NOT attempt to spawn sub-agents -- you are already a sub-agent.`;
+- Do NOT ask clarifying questions — work with what you have.`;
 }
