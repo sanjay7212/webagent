@@ -62,7 +62,7 @@ export function LabInstructionPanel({
           </div>
 
           {/* Description */}
-          <p className="text-sm text-gray-600 leading-relaxed">
+          <p className="text-sm text-gray-800 leading-relaxed">
             {lab.description}
           </p>
 
@@ -73,7 +73,7 @@ export function LabInstructionPanel({
             </h3>
             <ul className="space-y-2">
               {lab.objectives.map((objective, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                <li key={i} className="flex items-start gap-2 text-sm text-gray-800">
                   <CheckCircle
                     className="w-4 h-4 mt-0.5 flex-shrink-0"
                     style={{ color: "#5ba4b5" }}
@@ -102,9 +102,9 @@ export function LabInstructionPanel({
                       className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-gray-50 transition-colors"
                     >
                       {isExpanded ? (
-                        <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <ChevronDown className="w-4 h-4 text-gray-500 flex-shrink-0" />
                       ) : (
-                        <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <ChevronRight className="w-4 h-4 text-gray-500 flex-shrink-0" />
                       )}
                       <span className="text-sm font-medium text-gray-800">
                         {index + 1}. {step.title}
@@ -112,7 +112,7 @@ export function LabInstructionPanel({
                     </button>
                     {isExpanded && (
                       <div className="px-3 pb-3 pt-0 ml-6">
-                        <p className="text-sm text-gray-600 leading-relaxed">
+                        <p className="text-sm text-gray-800 leading-relaxed">
                           {step.instruction}
                         </p>
                         {step.hint && (
@@ -142,7 +142,7 @@ export function LabInstructionPanel({
                   <button
                     key={i}
                     onClick={() => onSuggestedPrompt(prompt)}
-                    className="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                    className="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-colors"
                   >
                     {prompt}
                   </button>

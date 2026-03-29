@@ -56,7 +56,7 @@ export function QuizPanel({
       <div className="border-b px-4 py-3">
         <button
           onClick={onBack}
-          className="mb-2 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800"
+          className="mb-2 flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
         >
           <span>←</span>
           <span>Back to Instructions</span>
@@ -142,7 +142,7 @@ export function QuizPanel({
 
                 {/* Explanation after submission */}
                 {submitted && (isCorrect || isWrong) && (
-                  <p className="mt-1 rounded-md bg-gray-50 px-3 py-2 text-xs text-gray-600">
+                  <p className="mt-1 rounded-md bg-gray-50 px-3 py-2 text-xs text-gray-700">
                     {question.explanation}
                   </p>
                 )}

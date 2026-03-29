@@ -29,7 +29,7 @@ interface LabSidebarProps {
 
 function LabStatusIcon({ progress }: { progress: LabProgress | undefined }) {
   if (!progress) {
-    return <span className="text-gray-400 text-sm">○</span>;
+    return <span className="text-gray-500 text-sm">○</span>;
   }
   if (progress.quizPassed) {
     return <span className="text-green-500 text-sm font-bold">✓</span>;
@@ -37,7 +37,7 @@ function LabStatusIcon({ progress }: { progress: LabProgress | undefined }) {
   if (progress.quizScore !== null) {
     return <span className="text-orange-500 text-sm">⚠</span>;
   }
-  return <span className="text-gray-400 text-sm">○</span>;
+  return <span className="text-gray-500 text-sm">○</span>;
 }
 
 export function LabSidebar({
@@ -107,7 +107,7 @@ export function LabSidebar({
                 className={`w-full flex items-center gap-2 rounded-md px-2 py-2 text-left transition-colors ${
                   isActive
                     ? "bg-[#5ba4b5]/10 text-[#5ba4b5] font-medium"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 }`}
               >
                 {isActive ? (
@@ -115,7 +115,7 @@ export function LabSidebar({
                 ) : (
                   <LabStatusIcon progress={labProgress} />
                 )}
-                <span className="text-xs text-gray-400 w-4 text-right">
+                <span className="text-xs text-gray-500 w-4 text-right">
                   {lab.number}
                 </span>
                 <span className="flex-1 text-sm truncate">{lab.title}</span>
