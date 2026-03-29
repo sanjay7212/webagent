@@ -1,0 +1,967 @@
+import type { Lab } from "./types";
+
+export const LABS: Lab[] = [
+  // ─── Lab 1: First Interaction ───────────────────────────────────────
+  {
+    id: "lab-01",
+    number: 1,
+    title: "First Interaction",
+    description:
+      "Learn the basics of communicating with an AI agent and observe how it structures responses.",
+    objectives: [
+      "Understand what an AI agent is and how it differs from a simple chatbot",
+      "Send your first prompt and observe the response format",
+      "Learn how prompt clarity affects response quality",
+    ],
+    steps: [
+      {
+        title: "Start a conversation",
+        instruction:
+          "A new conversation has been created for you. Notice the model selector in the header — it shows which AI model is powering the agent.",
+        hint: "The default model is Claude Opus 4.6, but you can switch to GPT or Gemini anytime.",
+      },
+      {
+        title: "Send a simple greeting",
+        instruction:
+          'Type "Hello, what can you help me with?" and press Send. Observe how the agent describes its capabilities.',
+      },
+      {
+        title: "Try a vague prompt",
+        instruction:
+          'Now send a vague request like "Do something cool." Notice how the agent interprets ambiguity — it may ask for clarification or make assumptions.',
+        hint: "Vague prompts often lead to generic or unexpected responses.",
+      },
+      {
+        title: "Try a specific prompt",
+        instruction:
+          'Send a specific request: "Write a Python function that checks if a number is prime, with docstring and examples." Compare the quality of this response to the vague one.',
+        hint: "Specific prompts with clear requirements produce much better results.",
+      },
+      {
+        title: "Reflect on the differences",
+        instruction:
+          "Compare the three responses. Which was most useful? The key takeaway: **prompt specificity directly determines output quality**. When you're ready, take the quiz.",
+      },
+    ],
+    suggestedPrompts: [
+      "Hello, what can you help me with?",
+      "Do something cool.",
+      "Write a Python function that checks if a number is prime, with docstring and examples.",
+    ],
+    quiz: {
+      passingScore: 2,
+      questions: [
+        {
+          id: "lab-01-q1",
+          question: "What is the main difference between an AI agent and a simple chatbot?",
+          options: [
+            "An agent can use tools and take actions, not just generate text",
+            "An agent is always faster than a chatbot",
+            "An agent can only answer questions about code",
+            "There is no difference — they are the same thing",
+          ],
+          correctIndex: 0,
+          explanation:
+            "AI agents can use tools (read files, run commands, search) and take autonomous actions, while simple chatbots only generate text responses.",
+        },
+        {
+          id: "lab-01-q2",
+          question: "What has the biggest impact on the quality of an agent's response?",
+          options: [
+            "The time of day you send the request",
+            "The clarity and specificity of your prompt",
+            "The length of the conversation so far",
+            "The color theme of the interface",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Prompt quality is the single biggest factor in response quality. Specific, clear prompts with defined requirements consistently produce better results.",
+        },
+        {
+          id: "lab-01-q3",
+          question: "When you send a vague prompt to an agent, what typically happens?",
+          options: [
+            "The agent refuses to respond",
+            "The agent crashes",
+            "The agent makes assumptions or asks for clarification",
+            "The agent always produces perfect output regardless",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Agents handle ambiguity by either making reasonable assumptions about your intent or asking clarifying questions — neither guarantees the result you actually wanted.",
+        },
+      ],
+    },
+  },
+
+  // ─── Lab 2: Understanding Tool Calls ────────────────────────────────
+  {
+    id: "lab-02",
+    number: 2,
+    title: "Understanding Tool Calls",
+    description:
+      "Open the Tools panel and observe how the agent uses tools to accomplish tasks.",
+    objectives: [
+      "Understand what tool calls are and why agents need them",
+      "Learn to read the Tool Calls panel",
+      "Identify which tools are read-only vs. write/execute",
+      "Understand tool call lifecycle: pending → running → done",
+    ],
+    steps: [
+      {
+        title: "Open the Tools panel",
+        instruction:
+          'Click the "🔧 Tools" button in the header. The Tools panel opens on the right showing 9 available tools with their risk levels (green = safe, yellow = caution, red = dangerous).',
+      },
+      {
+        title: "Trigger a read-only tool",
+        instruction:
+          'Ask the agent: "List all files in the current directory." Watch the Tools panel — you should see a `glob` or `bash` tool call appear with its status changing from pending to done.',
+        hint: "Read-only tools like glob and grep are low-risk — they only look at data, never modify it.",
+      },
+      {
+        title: "Trigger a write tool",
+        instruction:
+          'Ask the agent: "Create a file called hello.txt with the content Hello World." Watch the Tools panel for a `fileWrite` tool call. Notice it has a yellow risk indicator.',
+      },
+      {
+        title: "Examine tool call details",
+        instruction:
+          "Click on any tool call in the panel to expand it. You'll see the **Input** (what the agent sent to the tool) and **Output** (what came back). This is how you audit agent behavior.",
+        hint: "Expanding tool calls is essential for understanding what the agent actually did, not just what it said it did.",
+      },
+      {
+        title: "Review and take the quiz",
+        instruction:
+          "Review the tool inventory at the top of the panel. Note which tools are auto-approved vs. require manual approval. When ready, take the quiz.",
+      },
+    ],
+    suggestedPrompts: [
+      "List all files in the current directory.",
+      "Create a file called hello.txt with the content: Hello World",
+      "Read the contents of hello.txt",
+      "Search for any Python files in the workspace",
+    ],
+    quiz: {
+      passingScore: 3,
+      questions: [
+        {
+          id: "lab-02-q1",
+          question: "What is a tool call in the context of an AI agent?",
+          options: [
+            "A phone call the agent makes to get help",
+            "An action the agent takes to interact with the environment (read files, run commands, etc.)",
+            "A request from the user to switch tools",
+            "A way to measure the agent's performance",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Tool calls are how agents interact with the real world — reading files, writing code, executing commands, and searching through content.",
+        },
+        {
+          id: "lab-02-q2",
+          question: "Which of these tools is considered lowest risk?",
+          options: [
+            "bash (execute shell commands)",
+            "fileWrite (create or overwrite files)",
+            "fileRead (read file contents)",
+            "fileEdit (replace text in files)",
+          ],
+          correctIndex: 2,
+          explanation:
+            "fileRead only reads data — it cannot modify anything. bash is highest risk because shell commands can do virtually anything.",
+        },
+        {
+          id: "lab-02-q3",
+          question: "What is the typical lifecycle of a tool call?",
+          options: [
+            "done → running → pending",
+            "pending → running → done (or error)",
+            "start → middle → end",
+            "request → approve → deny",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Tool calls start as pending, transition to running when being executed, and end as done (success) or error (failure).",
+        },
+        {
+          id: "lab-02-q4",
+          question: "Why should an operator monitor tool calls?",
+          options: [
+            "To make the agent run faster",
+            "To verify what the agent actually did, not just what it claimed",
+            "Tool calls are only for debugging and have no operational value",
+            "To count how many messages were sent",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Monitoring tool calls lets you audit the agent's actual behavior. The agent might say 'I created the file' but the tool call panel shows you exactly what was written and where.",
+        },
+      ],
+    },
+  },
+
+  // ─── Lab 3: Model Selection ─────────────────────────────────────────
+  {
+    id: "lab-03",
+    number: 3,
+    title: "Model Selection",
+    description:
+      "Try the same task with different AI models and learn when to use each one.",
+    objectives: [
+      "Understand that different models have different strengths",
+      "Compare response styles across Claude, GPT, and Gemini",
+      "Learn to choose the right model for different task types",
+    ],
+    steps: [
+      {
+        title: "Send a creative task with the default model",
+        instruction:
+          'With the default model (Claude), send: "Write a short poem about artificial intelligence." Note the style and quality.',
+      },
+      {
+        title: "Switch models and compare",
+        instruction:
+          "Use the model selector in the header to switch to a GPT model. Start a new conversation and send the exact same prompt. Compare the output style.",
+        hint: "Different models have different 'personalities' — some are more creative, some more concise, some more detailed.",
+      },
+      {
+        title: "Try a technical task",
+        instruction:
+          'Switch models again and ask: "Explain the difference between TCP and UDP in networking." Compare how different models explain technical concepts.',
+      },
+      {
+        title: "Reflect on model differences",
+        instruction:
+          "Consider: Which model gave the most creative poem? Which explained the technical concept most clearly? Model selection is a key operator skill. Take the quiz when ready.",
+      },
+    ],
+    suggestedPrompts: [
+      "Write a short poem about artificial intelligence.",
+      "Explain the difference between TCP and UDP in networking.",
+      "Summarize the pros and cons of remote work in 3 bullet points.",
+    ],
+    quiz: {
+      passingScore: 2,
+      questions: [
+        {
+          id: "lab-03-q1",
+          question: "Why would an operator choose different models for different tasks?",
+          options: [
+            "All models produce identical results, so it doesn't matter",
+            "Different models have different strengths in creativity, speed, accuracy, and cost",
+            "You can only use one model per account",
+            "Switching models is only for testing purposes",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Models differ significantly in cost, speed, creativity, and accuracy. Choosing the right model for the task is a core operator skill.",
+        },
+        {
+          id: "lab-03-q2",
+          question: "Can you switch models in the middle of a conversation?",
+          options: [
+            "Yes — the model selector works at any time",
+            "No — the model is locked when the conversation starts",
+            "Only if you delete all previous messages first",
+            "Only administrators can change models",
+          ],
+          correctIndex: 0,
+          explanation:
+            "You can switch models at any time using the model selector. However, the new model won't have context from the previous model's reasoning process.",
+        },
+        {
+          id: "lab-03-q3",
+          question: "Do all models have access to the same tools?",
+          options: [
+            "No — each model has its own unique set of tools",
+            "Yes — tools are defined by the application, not the model",
+            "Only Claude models can use tools",
+            "Tools are disabled when switching models",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Tools are configured at the application level. All models have access to the same set of tools (fileRead, bash, etc.) regardless of provider.",
+        },
+      ],
+    },
+  },
+
+  // ─── Lab 4: Tool Approval Policies ──────────────────────────────────
+  {
+    id: "lab-04",
+    number: 4,
+    title: "Tool Approval Policies",
+    description:
+      "Learn to configure tool approval policies and understand when to use permissive, balanced, or strict modes.",
+    objectives: [
+      "Understand the three approval policy modes",
+      "Experience how strict mode requires manual approval for actions",
+      "Learn when each policy mode is appropriate",
+      "Practice approving and denying tool calls",
+    ],
+    recommendedToolPolicy: "strict",
+    steps: [
+      {
+        title: "Open Settings and review policies",
+        instruction:
+          'Click the ⚙️ button in the header to open Settings. Find the Tool Approval Policies section. Notice the three presets: Permissive, Balanced, and Strict.',
+      },
+      {
+        title: "Switch to Strict mode",
+        instruction:
+          "Select the **Strict** preset. This means every tool call will require your manual approval before it executes. Close settings.",
+        hint: "Strict mode is ideal for learning because you see every action the agent wants to take.",
+      },
+      {
+        title: "Ask the agent to read a file",
+        instruction:
+          'Send: "Read the file package.json and tell me what dependencies are installed." With strict mode, you should see an approval prompt before the agent can read the file. Click Approve.',
+      },
+      {
+        title: "Try denying a tool call",
+        instruction:
+          'Send: "Delete all files in the workspace." When the agent tries to execute a bash command, click **Deny**. Observe how the agent responds to the denial.',
+        hint: "Denying tool calls is a critical safety mechanism. The agent should gracefully handle denials.",
+      },
+      {
+        title: "Switch to Permissive and compare",
+        instruction:
+          "Open Settings again and switch to **Permissive** mode. Now ask the agent to read a file again. Notice it executes immediately without asking. Consider the tradeoff: speed vs. control.",
+      },
+    ],
+    suggestedPrompts: [
+      "Read the file package.json and tell me what dependencies are installed.",
+      "Delete all files in the workspace.",
+      "Create a new file called test.py with a hello world program.",
+      "List all files and their sizes in the workspace.",
+    ],
+    quiz: {
+      passingScore: 3,
+      questions: [
+        {
+          id: "lab-04-q1",
+          question: "What are the three tool approval policy modes?",
+          options: [
+            "Easy, Medium, Hard",
+            "Permissive, Balanced, Strict",
+            "Allow, Block, Filter",
+            "Read, Write, Execute",
+          ],
+          correctIndex: 1,
+          explanation:
+            "The three modes are Permissive (auto-approve all), Balanced (auto-approve reads, ask for writes/executes), and Strict (ask for everything).",
+        },
+        {
+          id: "lab-04-q2",
+          question: "In Balanced mode, which tool calls are auto-approved?",
+          options: [
+            "All tool calls are auto-approved",
+            "No tool calls are auto-approved",
+            "Read-only tools like fileRead, glob, and grep",
+            "Only bash commands",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Balanced mode auto-approves safe, read-only tools (fileRead, glob, grep, memoryRead) but requires manual approval for tools that can modify or execute (bash, fileWrite, fileEdit).",
+        },
+        {
+          id: "lab-04-q3",
+          question: "When is Strict mode most appropriate?",
+          options: [
+            "When you want the fastest possible execution",
+            "When operating in a production environment or when learning how the agent behaves",
+            "Strict mode should never be used",
+            "Only when the agent is making errors",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Strict mode is ideal for production environments where every action must be audited, and for learning contexts where you want to observe every tool call the agent makes.",
+        },
+        {
+          id: "lab-04-q4",
+          question: "What happens when you deny a tool call?",
+          options: [
+            "The entire conversation is deleted",
+            "The agent crashes and must be restarted",
+            "The agent receives an error and typically tries an alternative approach or explains it cannot proceed",
+            "Nothing happens — the tool runs anyway",
+          ],
+          correctIndex: 2,
+          explanation:
+            "When a tool call is denied, the agent receives an error response. Good agents will try alternative approaches or explain to the user why they cannot complete the task without that tool.",
+        },
+      ],
+    },
+  },
+
+  // ─── Lab 5: Multi-Step Tasks ────────────────────────────────────────
+  {
+    id: "lab-05",
+    number: 5,
+    title: "Multi-Step Tasks",
+    description:
+      "Give the agent a complex task and observe how it breaks it down into steps.",
+    objectives: [
+      "Understand how agents decompose complex tasks into steps",
+      "Observe the sequence of tool calls for a multi-step task",
+      "Learn what happens when an intermediate step fails",
+    ],
+    steps: [
+      {
+        title: "Open the Tools panel",
+        instruction:
+          'Click "🔧 Tools" to open the Tools panel so you can observe the sequence of tool calls.',
+      },
+      {
+        title: "Give a multi-step task",
+        instruction:
+          'Send: "Create a Python project with three files: a main.py that imports and uses a utils.py module, and a README.md explaining the project. Then run main.py and show the output." Watch the Tools panel as the agent works.',
+      },
+      {
+        title: "Observe the execution sequence",
+        instruction:
+          "Watch the tool calls appear in order. The agent should: (1) create utils.py, (2) create main.py, (3) create README.md, (4) run main.py with bash. Count the total tool calls.",
+        hint: "Agents may not always follow the order you expect. They plan their own execution sequence.",
+      },
+      {
+        title: "Observe error recovery",
+        instruction:
+          'If any step failed (e.g., a Python import error), notice how the agent detects the failure and fixes it. If everything succeeded, try: "Now modify utils.py to add a bug (a syntax error), then run main.py again."',
+      },
+    ],
+    suggestedPrompts: [
+      "Create a Python project with three files: a main.py that imports and uses a utils.py module, and a README.md explaining the project. Then run main.py and show the output.",
+      "Now modify utils.py to add a bug (a syntax error), then run main.py again.",
+      "Fix the bug you just introduced and verify it works.",
+    ],
+    quiz: {
+      passingScore: 2,
+      questions: [
+        {
+          id: "lab-05-q1",
+          question: "How does an agent typically handle a complex multi-step task?",
+          options: [
+            "It completes everything in a single tool call",
+            "It breaks the task into sequential steps, executing tool calls for each",
+            "It asks the user to break it down manually",
+            "It randomly picks which parts to do",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Agents decompose complex tasks into a sequence of smaller steps, making tool calls for each. You can observe this sequence in the Tool Calls panel.",
+        },
+        {
+          id: "lab-05-q2",
+          question: "What typically happens when an intermediate step in a multi-step task fails?",
+          options: [
+            "The agent stops immediately and gives up",
+            "The agent ignores the error and continues",
+            "The agent detects the error, diagnoses it, and attempts to fix it",
+            "The agent starts the entire task over from scratch",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Good agents detect errors from tool call results, diagnose what went wrong, and attempt recovery — often fixing the issue and retrying the failed step.",
+        },
+        {
+          id: "lab-05-q3",
+          question: "Why is monitoring the Tools panel important during multi-step tasks?",
+          options: [
+            "It's not important — just wait for the final result",
+            "To verify each step executed correctly and catch issues early",
+            "To count how much money the task costs",
+            "The agent won't work unless you watch the panel",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Monitoring tool calls lets you catch errors, verify correctness, and intervene early if the agent is going down the wrong path — before it wastes time and tokens.",
+        },
+      ],
+    },
+  },
+
+  // ─── Lab 6: Agent Delegation ────────────────────────────────────────
+  {
+    id: "lab-06",
+    number: 6,
+    title: "Agent Delegation",
+    description:
+      "Observe how the main agent delegates tasks to specialized sub-agents.",
+    objectives: [
+      "Understand the concept of agent delegation and sub-agents",
+      "Learn what the Explorer and Planner agents do",
+      "Read the Agent Executions panel to track delegation",
+      "Understand how tokens are split across agents",
+    ],
+    steps: [
+      {
+        title: "Open the Agents panel",
+        instruction:
+          'Click "🤖 Agents" in the header. Review the Available Agents section — you\'ll see the Default (main), Explorer, and Planner agents with their capabilities.',
+      },
+      {
+        title: "Trigger agent delegation",
+        instruction:
+          'Send a task that requires research: "Explore the workspace, understand the project structure, and create a summary document of what you find." The main agent should delegate the exploration to the Explorer sub-agent.',
+        hint: "Not all tasks trigger delegation. The agent decides when a sub-agent would be more effective.",
+      },
+      {
+        title: "Observe the Agent panel",
+        instruction:
+          "Watch the Agent Executions panel. You should see the main agent card, and below it an indented Explorer agent card showing its task, tool calls, and token usage.",
+      },
+      {
+        title: "Compare token usage",
+        instruction:
+          "Look at the token counts for each agent. The main agent orchestrates, while the sub-agent does the heavy lifting. Note how total tokens are split. This matters for cost management.",
+      },
+    ],
+    suggestedPrompts: [
+      "Explore the workspace, understand the project structure, and create a summary document of what you find.",
+      "Plan an approach to build a REST API for a todo app, then implement the first endpoint.",
+      "Research what testing frameworks are available, then write a simple test.",
+    ],
+    quiz: {
+      passingScore: 3,
+      questions: [
+        {
+          id: "lab-06-q1",
+          question: "What is a sub-agent?",
+          options: [
+            "A smaller, cheaper version of the main model",
+            "A specialized agent spawned by the main agent to handle a specific sub-task",
+            "A backup agent that runs when the main agent fails",
+            "A user who helps the agent",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Sub-agents are specialized agents (like Explorer for research, Planner for strategy) that the main agent spawns to handle specific parts of a complex task.",
+        },
+        {
+          id: "lab-06-q2",
+          question: "What tools does the Explorer agent have access to?",
+          options: [
+            "All tools including bash and fileWrite",
+            "Only read-only tools: fileRead, glob, grep, memoryRead",
+            "No tools — it only generates text",
+            "Only the bash tool",
+          ],
+          correctIndex: 1,
+          explanation:
+            "The Explorer agent is limited to read-only tools (fileRead, glob, grep, memoryRead) for safety — it can research and discover, but cannot modify anything.",
+        },
+        {
+          id: "lab-06-q3",
+          question: "How are tokens distributed in a delegation scenario?",
+          options: [
+            "Only the main agent uses tokens; sub-agents are free",
+            "Each agent (main and sub-agents) consumes its own tokens, and the total is the sum of all",
+            "Sub-agents always use more tokens than the main agent",
+            "Token usage is fixed regardless of delegation",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Each agent invocation consumes tokens independently. The total cost is the sum of all agents' token usage. Delegation adds overhead but can be more effective for complex tasks.",
+        },
+        {
+          id: "lab-06-q4",
+          question: "When does the main agent decide to delegate to a sub-agent?",
+          options: [
+            "It always delegates every task",
+            "Only when the user explicitly asks for delegation",
+            "When it determines a specialized agent would be more effective for part of the task",
+            "It never delegates — sub-agents are triggered manually",
+          ],
+          correctIndex: 2,
+          explanation:
+            "The main agent autonomously decides when delegation is beneficial — typically for tasks requiring extensive research (Explorer) or complex planning (Planner).",
+        },
+      ],
+    },
+  },
+
+  // ─── Lab 7: Model Comparison ────────────────────────────────────────
+  {
+    id: "lab-07",
+    number: 7,
+    title: "Model Comparison",
+    description:
+      "Use the side-by-side comparison mode to evaluate multiple models on the same task.",
+    objectives: [
+      "Learn to use the Model Comparison feature",
+      "Compare response quality across 2-3 models simultaneously",
+      "Understand token usage differences between models",
+    ],
+    steps: [
+      {
+        title: "Enter Comparison mode",
+        instruction:
+          'Click the "⚖️ Compare" button in the header. The interface switches to comparison mode.',
+      },
+      {
+        title: "Select models to compare",
+        instruction:
+          "Use the model selector dropdown to pick 2-3 models (e.g., Claude Opus 4.6, GPT-5.2, and Gemini 2.5 Pro).",
+      },
+      {
+        title: "Send a task to all models",
+        instruction:
+          'Type a prompt and send it. All selected models receive the same prompt simultaneously. Try: "Explain quantum computing in simple terms, using an analogy." Compare the responses side by side.',
+      },
+      {
+        title: "Compare token usage",
+        instruction:
+          "Look at the token count shown at the top of each column. Note which model used more tokens for the same task. More tokens usually means higher cost.",
+      },
+    ],
+    suggestedPrompts: [
+      "Explain quantum computing in simple terms, using an analogy.",
+      "Write a function to find the longest palindrome in a string. Include comments.",
+      "Give me 5 creative startup ideas for the education industry.",
+    ],
+    quiz: {
+      passingScore: 2,
+      questions: [
+        {
+          id: "lab-07-q1",
+          question: "What does the Model Comparison mode allow you to do?",
+          options: [
+            "Run the same prompt against 2-3 models simultaneously and compare responses side by side",
+            "Merge the output of multiple models into one response",
+            "Make models compete against each other in a game",
+            "Switch between models faster",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Comparison mode sends the same prompt to multiple models at once, displaying their responses side by side so you can evaluate quality, style, and cost differences.",
+        },
+        {
+          id: "lab-07-q2",
+          question: "Why would you compare token usage across models?",
+          options: [
+            "Token usage has no practical significance",
+            "To determine which model is most cost-effective for a given task type",
+            "To see which model is the newest",
+            "Token counts are always identical across models",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Token usage directly correlates with cost. A model that produces equally good output with fewer tokens is more cost-effective. Comparison mode helps you identify these tradeoffs.",
+        },
+        {
+          id: "lab-07-q3",
+          question: "When would multi-model consensus be valuable?",
+          options: [
+            "For simple tasks like 'hello world'",
+            "When you need high confidence in the answer for critical decisions",
+            "Consensus is never valuable — just pick one model",
+            "Only for creative writing tasks",
+          ],
+          correctIndex: 1,
+          explanation:
+            "If multiple models agree on an answer, confidence is higher. For high-stakes decisions (code review, security analysis), consensus from 2-3 models reduces the risk of a single model's blind spots.",
+        },
+      ],
+    },
+  },
+
+  // ─── Lab 8: Context & Memory ────────────────────────────────────────
+  {
+    id: "lab-08",
+    number: 8,
+    title: "Context & Memory",
+    description:
+      "Test how the agent maintains context across a long conversation and learn about memory limits.",
+    objectives: [
+      "Understand what a context window is and its limits",
+      "Test the agent's ability to remember earlier conversation turns",
+      "Learn strategies for managing long conversations",
+    ],
+    steps: [
+      {
+        title: "Establish context early",
+        instruction:
+          'Send: "Remember this: my favorite color is blue, my pet\'s name is Luna, and I work at a company called TechCorp." The agent will acknowledge storing this information.',
+      },
+      {
+        title: "Have a multi-turn conversation",
+        instruction:
+          "Send 5-6 unrelated messages on different topics (ask about weather, coding, recipes, etc.). This pushes the original context further back in the conversation.",
+      },
+      {
+        title: "Test recall",
+        instruction:
+          'Now ask: "What is my pet\'s name and where do I work?" See if the agent remembers the details from step 1.',
+        hint: "Most models maintain good recall within their context window. The challenge comes when conversations get very long.",
+      },
+      {
+        title: "Understand the limits",
+        instruction:
+          "Reflect: the agent remembered because all messages fit within its context window. In very long conversations (thousands of messages), older context gets truncated. Take the quiz when ready.",
+      },
+    ],
+    suggestedPrompts: [
+      "Remember this: my favorite color is blue, my pet's name is Luna, and I work at a company called TechCorp.",
+      "What's the recipe for a basic chocolate cake?",
+      "Explain how WiFi works in one paragraph.",
+      "Write a haiku about mountains.",
+      "What are the top 3 programming languages in 2025?",
+      "What is my pet's name and where do I work?",
+    ],
+    quiz: {
+      passingScore: 2,
+      questions: [
+        {
+          id: "lab-08-q1",
+          question: "What is a context window?",
+          options: [
+            "A popup window that shows context menus",
+            "The maximum amount of text (tokens) the model can process in a single conversation",
+            "A browser window showing the conversation",
+            "The time window in which the agent is active",
+          ],
+          correctIndex: 1,
+          explanation:
+            "The context window is the model's 'working memory' — the maximum number of tokens it can consider at once. This includes all messages in the conversation plus the system prompt.",
+        },
+        {
+          id: "lab-08-q2",
+          question: "What happens when a conversation exceeds the context window?",
+          options: [
+            "The conversation crashes",
+            "Older messages are truncated or summarized to fit within the limit",
+            "The model automatically upgrades to a larger context window",
+            "Nothing — context windows are unlimited",
+          ],
+          correctIndex: 1,
+          explanation:
+            "When the context window fills up, older messages are typically truncated. This means the agent may lose track of information from early in the conversation.",
+        },
+        {
+          id: "lab-08-q3",
+          question: "What is a good strategy for managing long conversations?",
+          options: [
+            "Start new conversations periodically and summarize key context",
+            "Never exceed 3 messages per conversation",
+            "Always use the largest model available",
+            "There is no way to manage this — it's a fundamental limitation with no workaround",
+          ],
+          correctIndex: 0,
+          explanation:
+            "Starting fresh conversations with a summary of key context is the best strategy. You can also use the agent's memory tools to persist important information across conversations.",
+        },
+      ],
+    },
+  },
+
+  // ─── Lab 9: Error Handling & Recovery ───────────────────────────────
+  {
+    id: "lab-09",
+    number: 9,
+    title: "Error Handling & Recovery",
+    description:
+      "Give the agent tasks that will fail and observe how it handles errors.",
+    objectives: [
+      "Understand how agents handle tool call failures",
+      "Observe retry behavior and alternative approaches",
+      "Learn when an agent gets stuck in a loop",
+      "Know when to intervene as an operator",
+    ],
+    steps: [
+      {
+        title: "Open the Tools panel",
+        instruction:
+          'Click "🔧 Tools" to observe tool calls, especially failures.',
+      },
+      {
+        title: "Trigger a file-not-found error",
+        instruction:
+          'Send: "Read the file called nonexistent_file.py and explain its contents." Watch the tool call fail and observe how the agent communicates the error.',
+      },
+      {
+        title: "Trigger a command failure",
+        instruction:
+          'Send: "Run the command \'python3 this_script_does_not_exist.py\' and show me the output." Observe how the agent handles the bash error.',
+      },
+      {
+        title: "Observe recovery behavior",
+        instruction:
+          'Send: "Install the package \'nonexistent_package_xyz_12345\' using pip." Watch if the agent retries, tries alternatives, or gracefully reports the failure.',
+        hint: "Good agents try a few alternatives before giving up. Bad agents get stuck in retry loops.",
+      },
+      {
+        title: "Reflect on operator intervention",
+        instruction:
+          "Consider: At what point should you intervene? If the agent is retrying the same failing command, that's wasting tokens. An operator should step in with guidance or cancel the task. Take the quiz.",
+      },
+    ],
+    suggestedPrompts: [
+      "Read the file called nonexistent_file.py and explain its contents.",
+      "Run the command 'python3 this_script_does_not_exist.py' and show me the output.",
+      "Install the package 'nonexistent_package_xyz_12345' using pip.",
+      "Connect to the database at localhost:9999 and list all tables.",
+    ],
+    quiz: {
+      passingScore: 3,
+      questions: [
+        {
+          id: "lab-09-q1",
+          question: "How do well-designed agents typically handle a failed tool call?",
+          options: [
+            "They crash and require a restart",
+            "They silently ignore the error and pretend it succeeded",
+            "They analyze the error, try alternatives, or clearly report the failure to the user",
+            "They automatically delete the conversation",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Good agents analyze error messages, attempt alternative approaches (different commands, different paths), and clearly communicate to the user when something cannot be done.",
+        },
+        {
+          id: "lab-09-q2",
+          question: "What is a retry loop and why is it problematic?",
+          options: [
+            "A retry loop is when the agent successfully completes a task on the second try",
+            "A retry loop is when the agent repeatedly attempts the same failing action, wasting tokens and time",
+            "Retry loops are always beneficial — persistence pays off",
+            "A retry loop only happens when the internet is disconnected",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Retry loops occur when the agent keeps trying the same approach despite repeated failures. This wastes tokens (costs money) and time without making progress. Operators should intervene.",
+        },
+        {
+          id: "lab-09-q3",
+          question: "When should an operator intervene during agent execution?",
+          options: [
+            "Never — always let the agent finish on its own",
+            "After every single tool call",
+            "When the agent is stuck in a retry loop, taking dangerous actions, or going down the wrong path",
+            "Only when the agent explicitly asks for help",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Operators should intervene when the agent is stuck (retry loops), taking unexpected or dangerous actions, or clearly misunderstanding the task — don't wait for the agent to figure it out.",
+        },
+        {
+          id: "lab-09-q4",
+          question:
+            "If an agent fails to read a file, what is a reasonable recovery strategy?",
+          options: [
+            "Delete the entire workspace",
+            "Check if the file exists, try alternative paths, or ask the user for the correct filename",
+            "Switch to a different AI model",
+            "Retry the exact same command 10 more times",
+          ],
+          correctIndex: 1,
+          explanation:
+            "A reasonable recovery strategy is to verify the file exists (using glob or ls), try alternative paths, or ask the user for clarification — not blindly retry the same command.",
+        },
+      ],
+    },
+  },
+
+  // ─── Lab 10: Cost & Performance ─────────────────────────────────────
+  {
+    id: "lab-10",
+    number: 10,
+    title: "Cost & Performance",
+    description:
+      "Analyze token usage across models and learn to optimize for cost vs. quality.",
+    objectives: [
+      "Understand what drives the cost of AI agent operations",
+      "Compare token usage between simple and complex models",
+      "Learn strategies to optimize cost without sacrificing quality",
+      "Calculate approximate costs for different workloads",
+    ],
+    steps: [
+      {
+        title: "Run a task on a fast model",
+        instruction:
+          'Select "Gemini 2.0 Flash" (a fast, cheap model). Send: "Write a Python function to calculate Fibonacci numbers." Open the Tools panel and note the token count.',
+      },
+      {
+        title: "Run the same task on a premium model",
+        instruction:
+          'Switch to "Claude Opus 4.6" (a premium model). Start a new conversation and send the exact same prompt. Compare the token count and response quality.',
+      },
+      {
+        title: "Use comparison mode for a direct view",
+        instruction:
+          'Enter comparison mode (⚖️ Compare) with both models. Send: "Explain the CAP theorem with examples." Look at the token counts in each column header.',
+      },
+      {
+        title: "Calculate the cost difference",
+        instruction:
+          "Consider: if the fast model used ~200 tokens and the premium model used ~500 tokens, and premium tokens cost 10x more, the premium response costs 25x more. Is the quality difference worth it? Take the quiz.",
+        hint: "For routine tasks, fast models are often 'good enough.' Reserve premium models for complex reasoning or critical tasks.",
+      },
+    ],
+    suggestedPrompts: [
+      "Write a Python function to calculate Fibonacci numbers.",
+      "Explain the CAP theorem with real-world examples.",
+      "Summarize the key points of this workspace in one paragraph.",
+      "Write a bash script to find all files larger than 1MB.",
+    ],
+    recommendedModel: "google:gemini-2.0-flash",
+    quiz: {
+      passingScore: 3,
+      questions: [
+        {
+          id: "lab-10-q1",
+          question: "What primarily drives the cost of AI agent operations?",
+          options: [
+            "The number of conversations created",
+            "The number of tokens processed (input + output)",
+            "The time the agent spends thinking",
+            "The number of users in the organization",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Cost is driven by token usage — both input tokens (your messages + context) and output tokens (the agent's responses). More tokens = higher cost.",
+        },
+        {
+          id: "lab-10-q2",
+          question: "Which costs more: input tokens or output tokens?",
+          options: [
+            "They always cost the same",
+            "Input tokens always cost more",
+            "Output tokens typically cost more (often 3-5x more than input tokens)",
+            "Neither has a cost — AI agents are free to operate",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Output tokens (the model generating new text) typically cost 3-5x more than input tokens across all major providers. This is why verbose responses are more expensive.",
+        },
+        {
+          id: "lab-10-q3",
+          question: "What is a good strategy to optimize AI agent costs?",
+          options: [
+            "Always use the most expensive model for everything",
+            "Use fast/cheap models for routine tasks and premium models only for complex reasoning",
+            "Never use AI agents — they're too expensive",
+            "Limit all responses to 10 words",
+          ],
+          correctIndex: 1,
+          explanation:
+            "Tiered model selection is the best strategy: use fast, cheap models (Gemini Flash, GPT-4o) for routine tasks and reserve premium models (Claude Opus, GPT-5.2) for tasks requiring deep reasoning.",
+        },
+        {
+          id: "lab-10-q4",
+          question:
+            "If 100 users each run 20 agent tasks per day, and each task averages 1,000 tokens at $0.01 per 1K tokens, what is the approximate daily cost?",
+          options: [
+            "$2",
+            "$20",
+            "$200",
+            "$2,000",
+          ],
+          correctIndex: 1,
+          explanation:
+            "100 users × 20 tasks × 1,000 tokens = 2,000,000 tokens. At $0.01 per 1K tokens: 2,000 × $0.01 = $20/day. This kind of back-of-envelope calculation is essential for budgeting.",
+        },
+      ],
+    },
+  },
+];

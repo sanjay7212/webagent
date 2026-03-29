@@ -48,7 +48,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
       {/* Header */}
       <div className="p-3 border-b border-gray-200 shrink-0">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-base font-semibold text-gray-800">
             Tool Calls
           </span>
           <Badge
@@ -129,7 +129,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
             onClick={() => setShowInventory((v) => !v)}
           >
             <span>{showInventory ? "▼" : "▶"}</span>
-            <span className="font-medium">Available Tools ({Object.keys(TOOL_META).length})</span>
+            <span className="font-semibold text-sm text-gray-700">Available Tools ({Object.keys(TOOL_META).length})</span>
           </button>
           {showInventory && (
             <div className="space-y-0.5 mb-3">
@@ -138,12 +138,12 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                 const pol = policies.find((p) => p.toolName === name);
                 const policyTag = pol?.policy === "auto_approve" ? "auto" : pol?.policy === "always_ask" ? "ask" : pol?.policy === "conditional" ? "cond" : "—";
                 return (
-                  <div key={name} className="flex items-center gap-2 px-2 py-1 rounded bg-gray-50 text-xs">
+                  <div key={name} className="flex items-center gap-2 px-2 py-1.5 rounded bg-gray-50 text-sm">
                     <span>{getRiskIcon(risk)}</span>
                     <span>{meta.icon}</span>
-                    <span className="font-mono text-gray-700">{name}</span>
-                    <span className="text-gray-500 truncate min-w-0">{meta.description}</span>
-                    <span className="ml-auto text-gray-400 shrink-0 font-mono">{policyTag}</span>
+                    <span className="font-mono font-medium text-gray-800">{name}</span>
+                    <span className="text-gray-500 truncate min-w-0 text-xs">{meta.description}</span>
+                    <span className="ml-auto text-gray-500 shrink-0 font-mono text-xs">{policyTag}</span>
                   </div>
                 );
               })}
@@ -199,7 +199,7 @@ export function ToolCallPanel({ messages }: ToolCallPanelProps) {
                     <span className="text-xs shrink-0">
                       {TOOL_META[tc.toolName]?.icon || "🔧"}
                     </span>
-                    <span className="font-mono text-xs text-gray-800 shrink-0">
+                    <span className="font-mono text-sm font-medium text-gray-800 shrink-0">
                       {tc.toolName}
                     </span>
                     {summary && (

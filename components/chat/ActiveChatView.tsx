@@ -14,6 +14,8 @@ interface ActiveChatViewProps {
   showToolCalls: boolean;
   showAgentPanel: boolean;
   workspaceId: string;
+  prefillInput?: string | null;
+  onPrefillConsumed?: () => void;
 }
 
 export function ActiveChatView({
@@ -22,8 +24,18 @@ export function ActiveChatView({
   showToolCalls,
   showAgentPanel,
   workspaceId,
+  prefillInput,
+  onPrefillConsumed,
 }: ActiveChatViewProps) {
   const [input, setInput] = useState("");
+
+  // Prefill input from lab suggested prompts
+  useEffect(() => {
+    if (prefillInput) {
+      setInput(prefillInput);
+      onPrefillConsumed?.();
+    }
+  }, [prefillInput, onPrefillConsumed]);
   const { policies, approveAndRemember } = useToolPolicies();
 
   const { messages, sendMessage, status, stop } = useChat({

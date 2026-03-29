@@ -182,7 +182,7 @@ export function AgentPanel({ messages }: AgentPanelProps) {
       {/* Header */}
       <div className="p-3 border-b border-gray-200 shrink-0">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-base font-semibold text-gray-800">
             Agent Executions
           </span>
           <Badge
@@ -221,15 +221,15 @@ export function AgentPanel({ messages }: AgentPanelProps) {
             onClick={() => setShowInventory((v) => !v)}
           >
             <span>{showInventory ? "▼" : "▶"}</span>
-            <span className="font-medium">Available Agents ({AVAILABLE_AGENTS.length})</span>
+            <span className="font-semibold text-sm text-gray-700">Available Agents ({AVAILABLE_AGENTS.length})</span>
           </button>
           {showInventory && (
             <div className="space-y-1 mb-3">
               {AVAILABLE_AGENTS.map((agent) => (
                 <div key={agent.name} className="px-2 py-1.5 rounded bg-gray-50">
-                  <div className="flex items-center gap-2 text-xs">
+                  <div className="flex items-center gap-2 text-sm">
                     <span>{agent.icon}</span>
-                    <span className="font-medium text-gray-800">{agent.label}</span>
+                    <span className="font-semibold text-gray-800">{agent.label}</span>
                     <Badge
                       variant="outline"
                       className={`text-xs ml-auto ${agentColors[agent.name] || "text-gray-500 border-gray-300 bg-gray-100"}`}
@@ -237,10 +237,10 @@ export function AgentPanel({ messages }: AgentPanelProps) {
                       {agent.name}
                     </Badge>
                   </div>
-                  <p className="text-xs text-gray-500 mt-0.5 ml-6">{agent.description}</p>
-                  <div className="flex gap-1 flex-wrap mt-1 ml-6">
+                  <p className="text-sm text-gray-600 mt-0.5 ml-6">{agent.description}</p>
+                  <div className="flex gap-1.5 flex-wrap mt-1 ml-6">
                     {agent.tools.map((t) => (
-                      <span key={t} className="text-xs text-gray-600 font-mono">{t}</span>
+                      <span key={t} className="text-xs text-gray-600 font-mono bg-gray-100 px-1.5 py-0.5 rounded">{t}</span>
                     ))}
                   </div>
                 </div>
