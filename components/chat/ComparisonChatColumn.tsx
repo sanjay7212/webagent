@@ -22,12 +22,14 @@ interface ComparisonChatColumnProps {
   conversationId: string;
   model: string;
   modelName: string;
+  /** Optional context label shown above the model badge (e.g. "Single Agent" / "Multi-Agent") */
+  label?: string;
 }
 
 export const ComparisonChatColumn = forwardRef<
   ComparisonChatColumnHandle,
   ComparisonChatColumnProps
->(function ComparisonChatColumn({ conversationId, model, modelName }, ref) {
+>(function ComparisonChatColumn({ conversationId, model, modelName, label }, ref) {
   const [tokenUsage, setTokenUsage] = useState<TokenUsage | null>(null);
 
   const { messages, sendMessage, status, stop } = useChat({
@@ -100,6 +102,9 @@ export const ComparisonChatColumn = forwardRef<
     <div ref={containerRef} className="flex flex-col h-full min-h-0">
       {/* Model header */}
       <div className="px-3 py-2 border-b border-gray-200 bg-gray-50 shrink-0">
+        {label && (
+          <div className="text-xs font-semibold text-gray-700 mb-1 truncate">{label}</div>
+        )}
         <div className="flex items-center justify-between">
           <span
             className={`text-xs font-medium ${providerColor} border rounded px-1.5 py-0.5`}

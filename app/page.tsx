@@ -90,8 +90,7 @@ export default function Home() {
 
   const handleToggleComparison = useCallback(() => {
     setComparisonMode((prev) => !prev);
-    if (!comparisonMode) setActiveLabId(null);
-  }, [comparisonMode]);
+  }, []);
 
   const handleQuizComplete = useCallback((score: number, passed: boolean) => {
     if (activeLabId) markCompleted(activeLabId, score, passed);
@@ -159,17 +158,37 @@ export default function Home() {
         </header>
 
         <div className="flex-1 flex overflow-hidden min-h-0">
-          {comparisonMode && comparisonModels.length >= 2 ? (
-            <ComparisonView models={comparisonModels} createConversation={createConversation} />
-          ) : comparisonMode ? (
-            <div className="flex-1 flex items-center justify-center bg-white">
-              <div className="text-center text-gray-500">
-                <div className="text-4xl mb-4">⚖️</div>
-                <h2 className="text-xl font-semibold text-gray-700 mb-2">Model Comparison</h2>
-                <p className="text-sm max-w-md mb-2">Select 2-3 models from the dropdown above to compare their responses side by side.</p>
-                <p className="text-xs text-gray-400">{comparisonModels.length === 0 ? "No models selected" : "Select at least one more model"}</p>
-              </div>
-            </div>
+          {comparisonMode ? (
+            <>
+              {/* Lab instructions stay visible throughout comparison mode */}
+              {activeLab && (
+                <div className="w-80 shrink-0 border-r border-gray-200 h-full overflow-hidden">
+                  {showQuiz ? (
+                    <QuizPanel quiz={activeLab.quiz} labTitle={activeLab.title} labNumber={activeLab.number} onComplete={handleQuizComplete} onBack={() => setShowQuiz(false)} />
+                  ) : (
+                    <LabInstructionPanel lab={activeLab} onStartQuiz={() => setShowQuiz(true)} onSuggestedPrompt={(prompt) => setPrefillInput(prompt)} progress={getLabProgress(activeLab.id)} comparisonMode={comparisonMode} onEnterComparisonMode={handleToggleComparison} />
+                  )}
+                </div>
+              )}
+              {comparisonModels.length >= 2 ? (
+                <ComparisonView
+                  models={comparisonModels}
+                  createConversation={createConversation}
+                  columnLabels={activeLab?.id === "lab-13" ? ["🔵 Single Agent (no delegation)", "🟢 Multi-Agent (with specialists)"] : undefined}
+                  prefillInput={prefillInput}
+                  onPrefillConsumed={() => setPrefillInput(null)}
+                />
+              ) : (
+                <div className="flex-1 flex items-center justify-center bg-white">
+                  <div className="text-center text-gray-500">
+                    <div className="text-4xl mb-4">⚖️</div>
+                    <h2 className="text-xl font-semibold text-gray-700 mb-2">Model Comparison</h2>
+                    <p className="text-sm max-w-md mb-2">Select 2–3 models from the dropdown above to compare responses side by side.</p>
+                    <p className="text-xs text-gray-400">{comparisonModels.length === 0 ? "No models selected yet" : "Select at least one more model"}</p>
+                  </div>
+                </div>
+              )}
+            </>
           ) : activeConversationId && activeConversation ? (
             <>
               {activeLab && (
@@ -177,7 +196,7 @@ export default function Home() {
                   {showQuiz ? (
                     <QuizPanel quiz={activeLab.quiz} labTitle={activeLab.title} labNumber={activeLab.number} onComplete={handleQuizComplete} onBack={() => setShowQuiz(false)} />
                   ) : (
-                    <LabInstructionPanel lab={activeLab} onStartQuiz={() => setShowQuiz(true)} onSuggestedPrompt={(prompt) => setPrefillInput(prompt)} progress={getLabProgress(activeLab.id)} />
+                    <LabInstructionPanel lab={activeLab} onStartQuiz={() => setShowQuiz(true)} onSuggestedPrompt={(prompt) => setPrefillInput(prompt)} progress={getLabProgress(activeLab.id)} comparisonMode={comparisonMode} onEnterComparisonMode={handleToggleComparison} />
                   )}
                 </div>
               )}

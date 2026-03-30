@@ -307,4 +307,109 @@ export const LABS: Lab[] = [
       ],
     },
   },
+  {
+    id: "lab-13",
+    number: 13,
+    title: "Single Agent vs Multi-Agent: A Marketing Showdown",
+    description: "Use Comparison Mode to run the same marketing campaign request against two models — one configured for single-agent responses and one using multi-agent delegation — and see the quality difference firsthand.",
+    objectives: [
+      "Understand why multi-agent systems produce higher-quality outputs than single agents for complex tasks",
+      "Use Comparison Mode to run two agents side-by-side on the same prompt",
+      "Identify specific quality differences: depth, specialization, structure, and accuracy",
+      "Recognize the trade-offs: multi-agent systems are more powerful but cost more tokens and time",
+    ],
+    steps: [
+      {
+        title: "Understand the experiment",
+        instruction: "In this lab you will run the **exact same marketing brief** through two different approaches and compare the results directly. **Approach A (Single Agent):** You'll ask the default agent to handle everything itself without delegating. **Approach B (Multi-Agent):** You'll allow the agent to delegate to specialist marketing and finance sub-agents. Click \"⚡ Compare\" in the header to open Comparison Mode before proceeding.",
+        hint: "Comparison Mode puts two AI responses side-by-side in the same window. You can run different models or compare different prompting strategies on the same model.",
+      },
+      {
+        title: "Set up the single-agent side",
+        instruction: "In Comparison Mode, set the **left panel** to any model (Claude Opus 4.6 works well). Send this prompt to the LEFT panel only: \"I need you to handle this yourself without involving other agents. Write a complete go-to-market campaign for 'Aria', a new AI-powered personal finance app targeting millennials aged 25-35. Include: (1) target audience persona, (2) key value propositions, (3) a 3-email welcome sequence with full copy, (4) social media content calendar for 2 weeks, (5) estimated 3-month ad spend budget and projected ROI.\"",
+        hint: "This is intentionally a broad, complex brief. Notice how a single agent must be an expert in copywriting, audience strategy, content planning, AND financial modeling all at once.",
+      },
+      {
+        title: "Run the multi-agent version",
+        instruction: "Now send the same brief to the **right panel**, but this time let the agent use its full delegation capabilities: \"Write a complete go-to-market campaign for 'Aria', a new AI-powered personal finance app targeting millennials aged 25-35. Include: (1) target audience persona, (2) key value propositions, (3) a 3-email welcome sequence with full copy, (4) social media content calendar for 2 weeks, (5) estimated 3-month ad spend budget and projected ROI.\" This time the agent should delegate to the marketing and finance specialists.",
+        hint: "Watch the Agents panel on the right side — you should see the main agent spawn a marketing sub-agent for the creative work and a finance sub-agent for the budget and ROI projections. Each specialist brings focused domain knowledge.",
+      },
+      {
+        title: "Compare the outputs",
+        instruction: "Read both responses carefully and score each on: **Depth** (how detailed is the audience persona and value props?), **Copy quality** (are the emails compelling with CTAs?), **Structure** (is the content calendar organized?), **Financial rigor** (are the budget estimates justified with assumptions?). Which output would you actually send to a marketing team or a CFO?",
+        hint: "Look for specific differences: Does the multi-agent version have more specific budget line items? Are the emails more personalized to the millennial persona? Is the social media calendar more platform-specific?",
+      },
+      {
+        title: "Check the Agent panel and take the quiz",
+        instruction: "Click '🤖 Agents' to open the Agent panel. Compare the delegation chain for each approach. Notice: the single-agent run shows 0 sub-agents; the multi-agent run shows the marketing and finance agents with their own tool calls and token usage. The multi-agent run costs more tokens but delivers specialist-grade output. When you have formed a clear opinion on the quality difference, take the quiz.",
+        hint: "Multi-agent is NOT always better — for simple, narrow tasks a single agent is faster and cheaper. The skill is knowing WHEN to use which approach.",
+      },
+    ],
+    requiresComparisonMode: true,
+    suggestedPrompts: [
+      "I need you to handle this yourself without involving other agents. Write a complete go-to-market campaign for 'Aria', a new AI-powered personal finance app targeting millennials aged 25-35. Include: target audience persona, key value propositions, a 3-email welcome sequence, social media content calendar for 2 weeks, and estimated 3-month ad spend budget with projected ROI.",
+      "Write a complete go-to-market campaign for 'Aria', a new AI-powered personal finance app targeting millennials aged 25-35. Include: target audience persona, key value propositions, a 3-email welcome sequence, social media content calendar for 2 weeks, and estimated 3-month ad spend budget with projected ROI.",
+      "Compare the two responses: which has more compelling email copy, a more specific social media plan, and a more rigorous budget breakdown?",
+      "What were the key differences between the single-agent and multi-agent responses for the Aria campaign?",
+    ],
+    promptTargets: [
+      "← Left panel (single agent)",
+      "Right panel → (multi-agent)",
+      "↔ Both panels",
+      "↔ Both panels",
+    ],
+    quiz: {
+      passingScore: 3,
+      questions: [
+        {
+          id: "lab-13-q1",
+          question: "What is the fundamental reason a multi-agent system typically outperforms a single agent on complex marketing campaigns?",
+          options: [
+            "Multi-agent systems run faster because tasks are parallelized",
+            "Each specialist agent has a focused system prompt with domain expertise, so the marketing agent writes better copy and the finance agent builds more rigorous budgets than a generalist could",
+            "Multi-agent systems always use more expensive models",
+            "Single agents cannot produce marketing content at all",
+          ],
+          correctIndex: 1,
+          explanation: "The quality gain comes from specialization. A marketing agent's system prompt is tuned for compelling copy, audience segmentation, and CTAs. A finance agent's prompt is tuned for structured calculations, assumptions, and risk analysis. A single generalist agent tries to be good at everything — and is therefore less expert at any one thing.",
+        },
+        {
+          id: "lab-13-q2",
+          question: "You asked both approaches to produce a 3-month ad spend budget. The multi-agent response included platform-specific CPM rates, audience size estimates, and a best/worst/expected scenario. The single-agent response gave one lump-sum estimate. What explains the difference?",
+          options: [
+            "The single-agent model ran out of context window",
+            "The finance sub-agent's specialized prompt instructs it to always show calculations, state assumptions, and model multiple scenarios — a generalist agent lacks these specific instructions",
+            "The multi-agent version used a better AI model",
+            "The difference was random — you would get the same result if you ran it again",
+          ],
+          correctIndex: 1,
+          explanation: "System prompt specialization drives output structure. The finance agent is explicitly instructed to 'always show work, state assumptions, and model best/worst/expected scenarios.' The default agent has no such instruction for financial outputs, so it provides whatever seems reasonable.",
+        },
+        {
+          id: "lab-13-q3",
+          question: "When is a single-agent approach PREFERABLE to a multi-agent approach?",
+          options: [
+            "Never — multi-agent is always better",
+            "When the task is narrow, well-defined, and doesn't require deep domain expertise in multiple fields — the overhead of spawning sub-agents isn't worth it",
+            "Only when the AI gateway is overloaded",
+            "When you want the agent to make mistakes",
+          ],
+          correctIndex: 1,
+          explanation: "Multi-agent systems have real overhead: more token usage, longer latency, and more complexity to monitor. For simple tasks like 'write a 1-sentence tweet' or 'summarize this email', a single agent is faster, cheaper, and good enough. Reserve multi-agent for complex tasks where specialist depth pays dividends.",
+        },
+        {
+          id: "lab-13-q4",
+          question: "As an operator evaluating whether to deploy a multi-agent system for your marketing team, what is the most important success criterion?",
+          options: [
+            "The multi-agent system always responds in under 10 seconds",
+            "The multi-agent output quality is high enough to reduce revision cycles and give your team outputs they can actually use — justifying the higher token cost and latency",
+            "The multi-agent system never makes any mistakes",
+            "The number of sub-agents spawned is maximized on every request",
+          ],
+          correctIndex: 1,
+          explanation: "ROI is the key metric. Multi-agent systems cost more (tokens, latency, complexity). The investment is justified only if the output quality meaningfully reduces human revision time, increases conversion rates, or produces work your team can use directly. Measure output quality against your team's actual needs, not theoretical perfection.",
+        },
+      ],
+    },
+  },
 ];

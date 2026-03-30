@@ -16,6 +16,8 @@ interface LabInstructionPanelProps {
   onStartQuiz: () => void;
   onSuggestedPrompt: (prompt: string) => void;
   progress: LabProgress | undefined;
+  comparisonMode?: boolean;
+  onEnterComparisonMode?: () => void;
 }
 
 export function LabInstructionPanel({
@@ -23,6 +25,8 @@ export function LabInstructionPanel({
   onStartQuiz,
   onSuggestedPrompt,
   progress,
+  comparisonMode,
+  onEnterComparisonMode,
 }: LabInstructionPanelProps) {
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(
     new Set([0])
@@ -65,6 +69,27 @@ export function LabInstructionPanel({
           <p className="text-sm text-gray-800 leading-relaxed">
             {lab.description}
           </p>
+
+          {/* Comparison Mode banner — shown when lab requires it */}
+          {lab.requiresComparisonMode && (
+            comparisonMode ? (
+              <div className="flex items-center gap-2 rounded-lg bg-[#5ba4b5]/10 border border-[#5ba4b5]/30 px-3 py-2">
+                <span className="text-sm">⚖️</span>
+                <span className="text-xs font-medium text-[#3d7a8a]">Comparison Mode is active</span>
+              </div>
+            ) : (
+              <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 space-y-2">
+                <p className="text-xs font-semibold text-amber-800">⚖️ This lab requires Comparison Mode</p>
+                <p className="text-xs text-amber-700">You need two side-by-side panels to compare single-agent vs multi-agent outputs.</p>
+                <button
+                  onClick={onEnterComparisonMode}
+                  className="w-full text-xs font-semibold py-1.5 rounded-md bg-amber-600 hover:bg-amber-700 text-white transition-colors"
+                >
+                  Open Comparison Mode →
+                </button>
+              </div>
+            )
+          )}
 
           {/* Objectives */}
           <div>
@@ -137,16 +162,26 @@ export function LabInstructionPanel({
               <h3 className="text-base font-semibold text-gray-900 mb-3">
                 Try These Prompts
               </h3>
-              <div className="flex flex-wrap gap-2">
-                {lab.suggestedPrompts.map((prompt, i) => (
-                  <button
-                    key={i}
-                    onClick={() => onSuggestedPrompt(prompt)}
-                    className="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-colors"
-                  >
-                    {prompt}
-                  </button>
-                ))}
+              <div className="flex flex-col gap-2">
+                {lab.suggestedPrompts.map((prompt, i) => {
+                  const target = lab.promptTargets?.[i];
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => onSuggestedPrompt(prompt)}
+                      className="text-left rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors overflow-hidden"
+                    >
+                      {target && (
+                        <div className="px-2.5 py-1 bg-gray-100 border-b border-gray-200 text-xs font-semibold text-[#3d7a8a]">
+                          {target}
+                        </div>
+                      )}
+                      <p className="text-xs px-2.5 py-1.5 text-gray-700 line-clamp-2">
+                        {prompt}
+                      </p>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}

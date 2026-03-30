@@ -9,6 +9,10 @@ export interface Lab {
   quiz: Quiz;
   recommendedModel?: string;
   recommendedToolPolicy?: "permissive" | "balanced" | "strict";
+  /** If true, the instructions panel shows a CTA to enter Comparison Mode */
+  requiresComparisonMode?: boolean;
+  /** Optional per-prompt target labels (e.g. "← Left panel", "Right panel →") */
+  promptTargets?: string[];
 }
 
 export interface LabStep {
