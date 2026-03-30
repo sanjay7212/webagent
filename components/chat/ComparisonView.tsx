@@ -41,6 +41,9 @@ export function ComparisonView({
   const [input, setInput] = useState("");
   const [ready, setReady] = useState(false);
   const [sendTarget, setSendTarget] = useState<SendTarget>("both");
+  // Reactive loading state per slot — updated via onLoadingChange callbacks
+  const [loadingSlots, setLoadingSlots] = useState<boolean[]>([]);
+  const anyLoading = loadingSlots.some(Boolean);
 
   // Apply prefill from lab suggested prompts
   useEffect(() => {
@@ -74,6 +77,7 @@ export function ComparisonView({
 
     setReady(false);
     setConversationIds([]);
+    setLoadingSlots(new Array(models.length).fill(false));
     columnRefs.current = new Array(models.length).fill(null);
     init();
 
@@ -81,8 +85,6 @@ export function ComparisonView({
       cancelled = true;
     };
   }, [models, createConversation]);
-
-  const anyLoading = columnRefs.current.some((ref) => ref?.isLoading);
 
   // Determine which slot indices to send to based on sendTarget
   const getTargetIndices = useCallback((): number[] => {
@@ -165,6 +167,13 @@ export function ComparisonView({
                 model={modelId}
                 modelName={getModelDisplayName(modelId)}
                 label={columnLabels?.[idx]}
+                onLoadingChange={(loading) => {
+                  setLoadingSlots((prev) => {
+                    const next = [...prev];
+                    next[idx] = loading;
+                    return next;
+                  });
+                }}
               />
             </div>
           );

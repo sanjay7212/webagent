@@ -105,10 +105,17 @@ export function ModelComparisonSelector({
                   const isFirstAddDisabled = count > 0 || selected.length >= 3;
 
                   return (
-                    <div
+                    <button
                       key={model.id}
-                      className={`flex items-center gap-2 w-full px-2 py-1.5 rounded text-sm transition-colors ${
+                      type="button"
+                      disabled={!canAddMore}
+                      onClick={() => addModel(model.id)}
+                      className={`flex items-center gap-2 w-full px-2 py-1.5 rounded text-sm transition-colors text-left ${
                         count > 0 ? "bg-[#5ba4b5]/10" : ""
+                      } ${
+                        !canAddMore
+                          ? "opacity-50 cursor-default"
+                          : "hover:bg-gray-200 cursor-pointer"
                       }`}
                     >
                       {/* Checkbox / count indicator */}
@@ -122,33 +129,21 @@ export function ModelComparisonSelector({
                         {count > 1 ? count : count === 1 ? "✓" : ""}
                       </span>
 
-                      {/* Model name — click to add first slot */}
-                      <button
-                        className={`flex-1 text-left text-gray-800 ${
-                          isFirstAddDisabled
-                            ? "opacity-50 cursor-default"
-                            : "hover:text-gray-900 cursor-pointer"
-                        }`}
-                        onClick={() => !isFirstAddDisabled && addModel(model.id)}
-                        disabled={isFirstAddDisabled}
-                      >
+                      {/* Model name */}
+                      <span className="flex-1 text-gray-800">
                         {model.name}
                         {count > 1 && (
                           <span className="ml-1 text-xs text-[#5ba4b5] font-medium">×{count}</span>
                         )}
-                      </button>
+                      </span>
 
-                      {/* "＋ Add again" — only shows when selected once and room for more */}
+                      {/* "＋ Add again" hint — clicking the row adds the second slot */}
                       {count === 1 && canAddMore && (
-                        <button
-                          onClick={(e) => addModel(model.id, e)}
-                          className="text-xs px-1.5 py-0.5 rounded border border-[#5ba4b5]/40 text-[#3d7a8a] hover:bg-[#5ba4b5]/20 font-medium transition-colors flex-shrink-0"
-                          title="Add this model to a second panel"
-                        >
+                        <span className="text-xs px-1.5 py-0.5 rounded border border-[#5ba4b5]/40 text-[#3d7a8a] font-medium flex-shrink-0">
                           ＋ Add again
-                        </button>
+                        </span>
                       )}
-                    </div>
+                    </button>
                   );
                 })}
               </div>

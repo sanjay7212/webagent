@@ -96,7 +96,7 @@ export function ActiveChatView({
     [approveAndRemember]
   );
 
-  // Prevent ancestor scroll — browser focus/scroll events can push
+  // Prevent ancestor scroll on mount — browser focus/scroll events can push
   // overflow:hidden parents off-screen
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -110,7 +110,7 @@ export function ActiveChatView({
       }
       parent = parent.parentElement;
     }
-  });
+  }, []);
 
   return (
     <div ref={containerRef} className="flex-1 flex overflow-hidden min-h-0">

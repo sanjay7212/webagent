@@ -24,12 +24,14 @@ interface ComparisonChatColumnProps {
   modelName: string;
   /** Optional context label shown above the model badge (e.g. "Single Agent" / "Multi-Agent") */
   label?: string;
+  /** Called whenever this column's loading state changes — lets the parent re-render reactively */
+  onLoadingChange?: (isLoading: boolean) => void;
 }
 
 export const ComparisonChatColumn = forwardRef<
   ComparisonChatColumnHandle,
   ComparisonChatColumnProps
->(function ComparisonChatColumn({ conversationId, model, modelName, label }, ref) {
+>(function ComparisonChatColumn({ conversationId, model, modelName, label, onLoadingChange }, ref) {
   const [tokenUsage, setTokenUsage] = useState<TokenUsage | null>(null);
 
   const { messages, sendMessage, status, stop } = useChat({
@@ -41,6 +43,16 @@ export const ComparisonChatColumn = forwardRef<
   });
 
   const isLoading = status === "submitted" || status === "streaming";
+
+  // Keep a stable ref to the latest onLoadingChange so the effect below only
+  // re-fires when isLoading actually changes (not when the parent re-renders
+  // with a new inline callback, which would cause an infinite loop).
+  const onLoadingChangeRef = useRef(onLoadingChange);
+  onLoadingChangeRef.current = onLoadingChange;
+
+  useEffect(() => {
+    onLoadingChangeRef.current?.(isLoading);
+  }, [isLoading]); // intentionally omits onLoadingChange — use the ref instead
 
   // Estimate tokens from text when streaming finishes
   useEffect(() => {
@@ -86,7 +98,7 @@ export const ComparisonChatColumn = forwardRef<
       ? "text-green-600 border-green-400/30"
       : "text-blue-400 border-blue-400/30";
 
-  // Prevent ancestor scroll
+  // Prevent ancestor scroll on mount
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = containerRef.current;
@@ -96,7 +108,7 @@ export const ComparisonChatColumn = forwardRef<
       if (parent.scrollTop !== 0) parent.scrollTop = 0;
       parent = parent.parentElement;
     }
-  });
+  }, []);
 
   return (
     <div ref={containerRef} className="flex flex-col h-full min-h-0">
