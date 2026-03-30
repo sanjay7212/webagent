@@ -15,7 +15,10 @@ COPY . .
 RUN npm run build
 
 # ─── Runtime stage ────────────────────────────────────────────────────────────
-FROM node:22-alpine AS runner
+# Base image is supplied by the Vocareum build process:
+#   docker build --build-arg BASE_IMAGE=<vocareum-repo/image:tag> ...
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE} AS runner
 
 ENV NODE_ENV=production
 ENV PORT=3000
